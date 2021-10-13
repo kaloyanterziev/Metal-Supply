@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+
+message Record {
+    message Owner {
+
+        // Public key of the agent who owns the record
+        string agent_id = 1;
+
+        // A percentage of the record that the owner owns
+        double percentage_owner = 2;
+
+        // Approximately when the owner was updated, as a Unix UTC timestamp
+        uint64 timestamp = 3;
+
+    }
+
+    message Location {
+        // Coordinates are expected to be in millionths of a degree
+        sint64 latitude = 1;
+        sint64 longitude = 2;
+
+        string agent_id = 3;
+
+        // Approximately when the location was updated, as a Unix UTC timestamp
+        uint64 timestamp = 4;
+    }
+
+    message Content {
+        string metal = 1;
+
+        double percentage = 2;
+    }
+
+    // record identifier
+    string record_id = 1;
+
+    string previous_record_id = 2;
+
+    // Ordered oldest to newest by timestamp
+    repeated Owner owners = 3;
+
+    string material_type = 4;
+
+    string material_origin = 5;
+
+    repeated Content contents = 6;
+
+    repeated Location locations = 7;
+}
+
+
+message RecordContainer {
+    repeated Record entries = 1;
+}
