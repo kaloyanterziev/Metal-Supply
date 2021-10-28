@@ -3,6 +3,7 @@ import time
 
 from sawtooth_sdk.processor.handler import TransactionHandler
 from sawtooth_sdk.processor.exceptions import InvalidTransaction
+from sawtooth_signing import create_context
 
 from metal_supply_addressing import addresser
 
@@ -55,8 +56,8 @@ class MetalSupplyHandler(TransactionHandler):
                 state=state,
                 public_key=header.signer_public_key,
                 payload=payload)
-        elif payload.action == payload_pb2.MetalSupplyPayload.UPDATE_RECORD:
-            _update_record(
+        elif payload.action == payload_pb2.MetalSupplyPayload.UPDATE_RECORD_LOCATION:
+            _update_record_location(
                 state=state,
                 public_key=header.signer_public_key,
                 payload=payload)
@@ -71,7 +72,7 @@ def _create_agent(state, public_key, payload):
     state.set_agent(
         public_key=public_key,
         name=payload.data.name,
-        role=payload.role,
+        role=payload.data.role,
         timestamp=payload.timestamp)
 
 
@@ -89,11 +90,14 @@ def _create_record(state, public_key, payload):
 
     _validate_latlng(payload.data.latitude, payload.data.longitude)
 
+    context = create_context('secp256k1')
+    record_id = context.new_random_private_key()
+
     state.set_record(
         public_key=public_key,
         latitude=payload.data.latitude,
         longitude=payload.data.longitude,
-        # record_id=payload.data.record_id,
+        record_id=record_id,
         material_type=payload.data.material_type,
         material_origin=payload.data.material_origin,
         contents=payload.data.contents,
@@ -118,11 +122,13 @@ def _transfer_record(state, public_key, payload):
 
     state.transfer_record(
         receiving_agent=payload.data.receiving_agent,
+        sending_agent=public_key,
         record_id=payload.data.record_id,
-        timestamp=payload.timestamp)
+        timestamp=payload.timestamp,
+        percentage=payload.data.percentage)
 
 
-def _update_record(state, public_key, payload):
+def _update_record_location(state, public_key, payload):
     record = state.get_record(payload.data.record_id)
     if record is None:
         raise InvalidTransaction('Record with the record id {} does not '
@@ -135,19 +141,18 @@ def _update_record(state, public_key, payload):
 
     _validate_latlng(payload.data.latitude, payload.data.longitude)
 
-    state.update_record(
+    state.update_record_location(
         latitude=payload.data.latitude,
         longitude=payload.data.longitude,
-        #record_id=payload.data.record_id,
+        record_id=payload.data.record_id,
+        agent_id=public_key,
         timestamp=payload.timestamp)
 
 
 def _validate_record_owner(signer_public_key, record):
-    """Validates that the public key of the signer is the latest (i.e.
-    current) owner of the record
+    """Validates that the public key of the signer is contained in the set of owners
     """
-    latest_owner = max(record.owners, key=lambda obj: obj.timestamp).agent_id
-    return latest_owner == signer_public_key
+    return any(owner.agent_id == signer_public_key for owner in record.owners)
 
 
 def _validate_latlng(latitude, longitude):

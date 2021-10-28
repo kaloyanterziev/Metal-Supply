@@ -17,7 +17,7 @@ message MetalSupplyPayload{
     // according to the action
     CreateAgentAction create_agent = 2;
     CreateRecordAction create_record = 3;
-    UpdateRecordAction update_record = 4;
+    UpdateRecordLocationAction update_record = 4;
     TransferRecordAction transfer_record = 5;
 
     // Approximately when transaction was submitted, as a Unix UTC timestamp
@@ -43,13 +43,13 @@ message CreateRecordAction {
 }
 
 
-message UpdateRecordAction {
+message UpdateRecordLocationAction {
     // The id of the record being updated
     string record_id = 1;
-
     // Coordinates are expected to be in millionths of a degree
     sint64 latitude = 2;
     sint64 longitude = 3;
+    string agent_id = 4;
 }
 
 

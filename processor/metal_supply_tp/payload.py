@@ -30,10 +30,10 @@ class MetalSupplyPayload(object):
                 payload_pb2.MetalSupplyPayload.TRANSFER_RECORD:
             return self._transaction.transfer_record
 
-        if self._transaction.HasField('update_record') and \
+        if self._transaction.HasField('update_record_location') and \
             self._transaction.action == \
-                payload_pb2.MetalSupplyPayload.UPDATE_RECORD:
-            return self._transaction.update_record
+                payload_pb2.MetalSupplyPayload.UPDATE_RECORD_LOCATION:
+            return self._transaction.update_record_location
 
         raise InvalidTransaction('Action does not match payload data')
 

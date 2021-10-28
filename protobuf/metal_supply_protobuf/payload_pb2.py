@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\rpayload.proto\"\xdc\x02\n\x12MetalSupplyPayload\x12*\n\x06\x61\x63tion\x18\x01 \x01(\x0e\x32\x1a.MetalSupplyPayload.Action\x12(\n\x0c\x63reate_agent\x18\x02 \x01(\x0b\x32\x12.CreateAgentAction\x12*\n\rcreate_record\x18\x03 \x01(\x0b\x32\x13.CreateRecordAction\x12*\n\rupdate_record\x18\x04 \x01(\x0b\x32\x13.UpdateRecordAction\x12.\n\x0ftransfer_record\x18\x05 \x01(\x0b\x32\x15.TransferRecordAction\x12\x11\n\ttimestamp\x18\x06 \x01(\x04\"U\n\x06\x41\x63tion\x12\x10\n\x0c\x43REATE_AGENT\x10\x00\x12\x11\n\rCREATE_RECORD\x10\x01\x12\x11\n\rUPDATE_RECORD\x10\x02\x12\x13\n\x0fTRANSFER_RECORD\x10\x03\"/\n\x11\x43reateAgentAction\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04role\x18\x02 \x01(\t\"L\n\x12\x43reateRecordAction\x12\x11\n\trecord_id\x18\x01 \x01(\t\x12\x10\n\x08latitude\x18\x02 \x01(\x12\x12\x11\n\tlongitude\x18\x03 \x01(\x12\"L\n\x12UpdateRecordAction\x12\x11\n\trecord_id\x18\x01 \x01(\t\x12\x10\n\x08latitude\x18\x02 \x01(\x12\x12\x11\n\tlongitude\x18\x03 \x01(\x12\"B\n\x14TransferRecordAction\x12\x11\n\trecord_id\x18\x01 \x01(\t\x12\x17\n\x0freceiving_agent\x18\x02 \x01(\tb\x06proto3'
+  serialized_pb=b'\n\rpayload.proto\"\xe4\x02\n\x12MetalSupplyPayload\x12*\n\x06\x61\x63tion\x18\x01 \x01(\x0e\x32\x1a.MetalSupplyPayload.Action\x12(\n\x0c\x63reate_agent\x18\x02 \x01(\x0b\x32\x12.CreateAgentAction\x12*\n\rcreate_record\x18\x03 \x01(\x0b\x32\x13.CreateRecordAction\x12\x32\n\rupdate_record\x18\x04 \x01(\x0b\x32\x1b.UpdateRecordLocationAction\x12.\n\x0ftransfer_record\x18\x05 \x01(\x0b\x32\x15.TransferRecordAction\x12\x11\n\ttimestamp\x18\x06 \x01(\x04\"U\n\x06\x41\x63tion\x12\x10\n\x0c\x43REATE_AGENT\x10\x00\x12\x11\n\rCREATE_RECORD\x10\x01\x12\x11\n\rUPDATE_RECORD\x10\x02\x12\x13\n\x0fTRANSFER_RECORD\x10\x03\"/\n\x11\x43reateAgentAction\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04role\x18\x02 \x01(\t\"L\n\x12\x43reateRecordAction\x12\x11\n\trecord_id\x18\x01 \x01(\t\x12\x10\n\x08latitude\x18\x02 \x01(\x12\x12\x11\n\tlongitude\x18\x03 \x01(\x12\"f\n\x1aUpdateRecordLocationAction\x12\x11\n\trecord_id\x18\x01 \x01(\t\x12\x10\n\x08latitude\x18\x02 \x01(\x12\x12\x11\n\tlongitude\x18\x03 \x01(\x12\x12\x10\n\x08\x61gent_id\x18\x04 \x01(\t\"B\n\x14TransferRecordAction\x12\x11\n\trecord_id\x18\x01 \x01(\t\x12\x17\n\x0freceiving_agent\x18\x02 \x01(\tb\x06proto3'
 )
 
 
@@ -54,8 +54,8 @@ _METALSUPPLYPAYLOAD_ACTION = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=281,
-  serialized_end=366,
+  serialized_start=289,
+  serialized_end=374,
 )
 _sym_db.RegisterEnumDescriptor(_METALSUPPLYPAYLOAD_ACTION)
 
@@ -124,7 +124,7 @@ _METALSUPPLYPAYLOAD = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=18,
-  serialized_end=366,
+  serialized_end=374,
 )
 
 
@@ -162,8 +162,8 @@ _CREATEAGENTACTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=368,
-  serialized_end=415,
+  serialized_start=376,
+  serialized_end=423,
 )
 
 
@@ -208,37 +208,44 @@ _CREATERECORDACTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=417,
-  serialized_end=493,
+  serialized_start=425,
+  serialized_end=501,
 )
 
 
-_UPDATERECORDACTION = _descriptor.Descriptor(
-  name='UpdateRecordAction',
-  full_name='UpdateRecordAction',
+_UPDATERECORDLOCATIONACTION = _descriptor.Descriptor(
+  name='UpdateRecordLocationAction',
+  full_name='UpdateRecordLocationAction',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='record_id', full_name='UpdateRecordAction.record_id', index=0,
+      name='record_id', full_name='UpdateRecordLocationAction.record_id', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='latitude', full_name='UpdateRecordAction.latitude', index=1,
+      name='latitude', full_name='UpdateRecordLocationAction.latitude', index=1,
       number=2, type=18, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='longitude', full_name='UpdateRecordAction.longitude', index=2,
+      name='longitude', full_name='UpdateRecordLocationAction.longitude', index=2,
       number=3, type=18, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='agent_id', full_name='UpdateRecordLocationAction.agent_id', index=3,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
@@ -254,8 +261,8 @@ _UPDATERECORDACTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=495,
-  serialized_end=571,
+  serialized_start=503,
+  serialized_end=605,
 )
 
 
@@ -293,20 +300,20 @@ _TRANSFERRECORDACTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=573,
-  serialized_end=639,
+  serialized_start=607,
+  serialized_end=673,
 )
 
 _METALSUPPLYPAYLOAD.fields_by_name['action'].enum_type = _METALSUPPLYPAYLOAD_ACTION
 _METALSUPPLYPAYLOAD.fields_by_name['create_agent'].message_type = _CREATEAGENTACTION
 _METALSUPPLYPAYLOAD.fields_by_name['create_record'].message_type = _CREATERECORDACTION
-_METALSUPPLYPAYLOAD.fields_by_name['update_record'].message_type = _UPDATERECORDACTION
+_METALSUPPLYPAYLOAD.fields_by_name['update_record'].message_type = _UPDATERECORDLOCATIONACTION
 _METALSUPPLYPAYLOAD.fields_by_name['transfer_record'].message_type = _TRANSFERRECORDACTION
 _METALSUPPLYPAYLOAD_ACTION.containing_type = _METALSUPPLYPAYLOAD
 DESCRIPTOR.message_types_by_name['MetalSupplyPayload'] = _METALSUPPLYPAYLOAD
 DESCRIPTOR.message_types_by_name['CreateAgentAction'] = _CREATEAGENTACTION
 DESCRIPTOR.message_types_by_name['CreateRecordAction'] = _CREATERECORDACTION
-DESCRIPTOR.message_types_by_name['UpdateRecordAction'] = _UPDATERECORDACTION
+DESCRIPTOR.message_types_by_name['UpdateRecordLocationAction'] = _UPDATERECORDLOCATIONACTION
 DESCRIPTOR.message_types_by_name['TransferRecordAction'] = _TRANSFERRECORDACTION
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -331,12 +338,12 @@ CreateRecordAction = _reflection.GeneratedProtocolMessageType('CreateRecordActio
   })
 _sym_db.RegisterMessage(CreateRecordAction)
 
-UpdateRecordAction = _reflection.GeneratedProtocolMessageType('UpdateRecordAction', (_message.Message,), {
-  'DESCRIPTOR' : _UPDATERECORDACTION,
+UpdateRecordLocationAction = _reflection.GeneratedProtocolMessageType('UpdateRecordLocationAction', (_message.Message,), {
+  'DESCRIPTOR' : _UPDATERECORDLOCATIONACTION,
   '__module__' : 'payload_pb2'
-  # @@protoc_insertion_point(class_scope:UpdateRecordAction)
+  # @@protoc_insertion_point(class_scope:UpdateRecordLocationAction)
   })
-_sym_db.RegisterMessage(UpdateRecordAction)
+_sym_db.RegisterMessage(UpdateRecordLocationAction)
 
 TransferRecordAction = _reflection.GeneratedProtocolMessageType('TransferRecordAction', (_message.Message,), {
   'DESCRIPTOR' : _TRANSFERRECORDACTION,

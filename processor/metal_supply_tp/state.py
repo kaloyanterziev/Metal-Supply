@@ -9,7 +9,7 @@ class MetalSupplyState(object):
         self._context = context
         self._timeout = timeout
 
-    def get_agent(self, public_key):
+    def get_agent(self, public_key) -> agent_pb2.Agent:
         """Gets the agent associated with the public_key
 
         Args:
@@ -55,7 +55,7 @@ class MetalSupplyState(object):
         updated_state[address] = data
         self._context.set_state(updated_state, timeout=self._timeout)
 
-    def get_record(self, record_id):
+    def get_record(self, record_id) -> record_pb2.Record:
         """Gets the record associated with the record_id
 
         Args:
@@ -81,6 +81,9 @@ class MetalSupplyState(object):
                    latitude,
                    longitude,
                    record_id,
+                   material_type,
+                   material_origin,
+                   contents,
                    timestamp):
         """Creates a new record in state
 
@@ -92,9 +95,12 @@ class MetalSupplyState(object):
             timestamp (int): Unix UTC timestamp of when the agent was created
         """
         address = addresser.get_record_address(record_id)
+
+        contents = [record_pb2.Record.Content(percentage=content.percentage, metal=content.metal) for content in contents]
         owner = record_pb2.Record.Owner(
             agent_id=public_key,
-            timestamp=timestamp)
+            timestamp=timestamp,
+            percentage=100.0)
         location = record_pb2.Record.Location(
             latitude=latitude,
             longitude=longitude,
@@ -103,7 +109,10 @@ class MetalSupplyState(object):
         record = record_pb2.Record(
             record_id=record_id,
             owners=[owner],
-            locations=[location])
+            locations=[location],
+            material_type=material_type,
+            material_origin=material_origin,
+            contents=contents)
         container = record_pb2.RecordContainer()
         state_entries = self._context.get_state(
             addresses=[address], timeout=self._timeout)
@@ -117,28 +126,44 @@ class MetalSupplyState(object):
         updated_state[address] = data
         self._context.set_state(updated_state, timeout=self._timeout)
 
-    def transfer_record(self, receiving_agent, record_id, timestamp):
-        owner = record_pb2.Record.Owner(
-            agent_id=receiving_agent,
-            timestamp=timestamp)
+    def transfer_record(self, receiving_agent, sending_agent, record_id, timestamp, percentage):
+
         address = addresser.get_record_address(record_id)
         container = record_pb2.RecordContainer()
+        record = record_pb2.Record()
         state_entries = self._context.get_state(
             addresses=[address], timeout=self._timeout)
         if state_entries:
             container.ParseFromString(state_entries[0].data)
-            for record in container.entries:
-                if record.record_id == record_id:
-                    record.owners.extend([owner])
+            for record_entry in container.entries:
+                if record_entry.record_id == record_id:
+                    record = record_entry
+
+        sending_owner = next(owner for owner in record.owners if owner.agent_id == sending_agent)
+        receiving_owner = next((owner for owner in record.owners if owner.agent_id == receiving_agent), None)
+        receiving_percentage = percentage * sending_owner.percentage / 100.0
+        sending_owner.percentage -= receiving_percentage
+
+        if receiving_owner is None :
+            owner = record_pb2.Record.Owner(
+                agent_id=receiving_agent,
+                timestamp=timestamp,
+                percentage=receiving_percentage)
+            record.owners.extend([owner])
+        else:
+            receiving_owner.percentage += receiving_percentage
+
+
         data = container.SerializeToString()
         updated_state = {}
         updated_state[address] = data
         self._context.set_state(updated_state, timeout=self._timeout)
 
-    def update_record(self, latitude, longitude, record_id, timestamp):
+    def update_record_location(self, latitude, longitude, record_id, agent_id, timestamp):
         location = record_pb2.Record.Location(
             latitude=latitude,
             longitude=longitude,
+            agent_id=agent_id,
             timestamp=timestamp)
         address = addresser.get_record_address(record_id)
         container = record_pb2.RecordContainer()
