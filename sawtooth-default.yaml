@@ -16,6 +16,22 @@
 version: "2.1"
 
 services:
+
+  metal-supply-shell:
+    build:
+      context: .
+      dockerfile: ./shell/Dockerfile
+    image: metal-supply-shell
+    container_name: metal-supply-shell
+    volumes:
+      - .:/project/metal-supply
+    command: |
+      bash -c "
+        metal-supply-protogen
+        tail -f /dev/null
+      "
+#      tail -f /dev/null
+
   metal-supply-tp:
     build:
       context: .
@@ -23,7 +39,7 @@ services:
     image: metal-supply-tp
     container_name: metal-supply-tp
     volumes:
-      - ".:/project/metal-supply"
+      - '.:/project/metal-supply'
     depends_on:
       - metal-supply-shell
     command: |
@@ -33,100 +49,69 @@ services:
       "
 
   settings-tp:
-    image: hyperledger/sawtooth-settings-tp:1.2
+    image: hyperledger/sawtooth-settings-tp:chime
     container_name: sawtooth-settings-tp
-    expose:
-      - 4004
     depends_on:
       - validator
-    entrypoint: settings-tp -vv tcp://validator:4004
+    entrypoint: settings-tp -vv -C tcp://validator:4004
 
-  intkey-tp-python:
-    image: hyperledger/sawtooth-intkey-tp-python:1.2
-    container_name: sawtooth-intkey-tp-python-default
-    expose:
-      - 4004
-    depends_on:
-      - validator
-    entrypoint: intkey-tp-python -vv tcp://validator:4004
 
   validator:
-    image: hyperledger/sawtooth-validator:1.2
+    image: hyperledger/sawtooth-validator:chime
     container_name: sawtooth-validator
     expose:
       - 4004
     ports:
       - "4004:4004"
     # start the validator with an empty genesis batch
-    command: |
-      bash -c "
-        if [ ! -f /etc/sawtooth/keys/validator.priv ]; then
-          sawadm keygen
-          sawtooth keygen my_key
-          sawset genesis -k /root/.sawtooth/keys/my_key.priv
-          sawset proposal create -k /root/.sawtooth/keys/my_key.priv \
+    entrypoint: "bash -c \"\
+          sawadm keygen && \
+          sawtooth keygen my_key && \
+          sawset genesis -k /root/.sawtooth/keys/my_key.priv && \
+          sawset proposal create \
+            -k /root/.sawtooth/keys/my_key.priv \
             sawtooth.consensus.algorithm.name=Devmode \
             sawtooth.consensus.algorithm.version=0.1 \
-            -o config.batch
-          sawadm genesis config-genesis.batch config.batch
-        fi;
-        sawtooth-validator -vv \
-          --endpoint tcp://validator:8800 \
-          --bind component:tcp://eth0:4004 \
-          --bind network:tcp://eth0:8800 \
-          --bind consensus:tcp://eth0:5050
-      "
+            -o config.batch && \
+          sawadm genesis config-genesis.batch config.batch && \
+          sawtooth-validator -vv \
+            --endpoint tcp://validator:8800 \
+            --bind component:tcp://eth0:4004 \
+            --bind network:tcp://eth0:8800 \
+            --bind consensus:tcp://eth0:5050 \
+          \""
 
   devmode-engine:
-    image: hyperledger/sawtooth-devmode-engine-rust:1.2
-    expose:
-      - 5050
-    ports:
-      - "5050:5050"
+    image: hyperledger/sawtooth-devmode-engine-rust:chime
     container_name: sawtooth-devmode-engine-rust-default
     depends_on:
       - validator
-    entrypoint: devmode-engine-rust --connect tcp://validator:5050
-
-  postgres:
-    image: postgres:alpine
-    container_name: metal-supply-postgres
-    restart: always
-    environment:
-      POSTGRES_USER: sawtooth
-      POSTGRES_PASSWORD: sawtooth
-      POSTGRES_DB: metal-supply
-    ports:
-      - "5432:5432"
-
-  adminer:
-    image: adminer
-    container_name: metal-supply-adminer
-    restart: always
-    ports:
-      - "8080:8080"
+    entrypoint: devmode-engine-rust -C tcp://validator:5050
 
   rest-api:
-    image: hyperledger/sawtooth-rest-api:1.2
-    container_name: sawtooth-rest-api
-    expose:
-      - 4004
-      - 8008
+    image: hyperledger/sawtooth-rest-api:chime
+    container_name: sawtooth-rest-api-default
     ports:
       - "8008:8008"
     depends_on:
       - validator
-    entrypoint: sawtooth-rest-api --connect tcp://validator:4004 --bind rest-api:8008
+    entrypoint: sawtooth-rest-api -C tcp://validator:4004 --bind rest-api:8008
 
-  shell:
-    image: hyperledger/sawtooth-shell:1.2
-    container_name: sawtooth-shell-default
-    expose:
-      - 8008
-      - 4004
-    depends_on:
-      - rest-api
-    entrypoint: "bash -c \"\
-      sawtooth keygen && \
-      tail -f /dev/null \
-      \""
+
+#  postgres:
+#    image: postgres:alpine
+#    container_name: metal-supply-postgres
+#    restart: always
+#    environment:
+#      POSTGRES_USER: sawtooth
+#      POSTGRES_PASSWORD: sawtooth
+#      POSTGRES_DB: metal-supply
+#    ports:
+#      - "5432:5432"
+#
+#  adminer:
+#    image: adminer
+#    container_name: metal-supply-adminer
+#    restart: always
+#    ports:
+#      - "8080:8080"
