@@ -70,6 +70,7 @@ class RouteHandler(object):
         await self._messenger.send_create_agent_transaction(
             private_key=private_key,
             name=body.get('name'),
+            role=body.get('role'),
             timestamp=get_time())
 
         encrypted_private_key = encrypt_private_key(

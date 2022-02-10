@@ -114,6 +114,23 @@ services:
       bash -c "
         metal-supply-rest-api -B metal-supply-rest-api:8000 -C validator:4004 --db-host postgres -vv
       "
+  metal-supply-subscriber:
+    build:
+      context: .
+      dockerfile: ./subscriber/Dockerfile
+    image: metal-supply-subscriber
+    container_name: metal-supply-subscriber
+    volumes:
+      - ".:/project/metal-supply"
+    depends_on:
+      - metal-supply-shell
+      - postgres
+    command: |
+      bash -c "
+        metal-supply-subscriber init --db-host postgres -vv
+        sleep 3
+        metal-supply-subscriber subscribe --db-host postgres -C tcp://validator:4004 -vv
+      "
 
   postgres:
     image: postgres:alpine

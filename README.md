@@ -13,3 +13,15 @@ Stop the containers before every run with:
 ```bash
 docker-compose -f sawtooth-default.yaml down
 ```
+
+## Check contents of DB
+
+```bash
+docker exec -it <hash> sh
+```
+
+```bash
+psql -U sawtooth metal-supply
+```
+
+write SQL

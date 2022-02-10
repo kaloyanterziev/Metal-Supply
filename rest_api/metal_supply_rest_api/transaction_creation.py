@@ -27,6 +27,7 @@ from metal_supply_protobuf import payload_pb2
 def make_create_agent_transaction(transaction_signer,
                                   batch_signer,
                                   name,
+                                  role,
                                   timestamp):
     """Make a CreateAgentAction transaction and wrap it in a batch
 
@@ -34,6 +35,7 @@ def make_create_agent_transaction(transaction_signer,
         transaction_signer (sawtooth_signing.Signer): The transaction key pair
         batch_signer (sawtooth_signing.Signer): The batch key pair
         name (str): The agent's name
+        role (str): The agent's role
         timestamp (int): Unix UTC timestamp of when the agent is created
 
     Returns:
@@ -48,10 +50,10 @@ def make_create_agent_transaction(transaction_signer,
 
     outputs = [agent_address]
 
-    action = payload_pb2.CreateAgentAction(name=name)
+    action = payload_pb2.CreateAgentAction(name=name, role=role)
 
-    payload = payload_pb2.SimpleSupplyPayload(
-        action=payload_pb2.SimpleSupplyPayload.CREATE_AGENT,
+    payload = payload_pb2.MetalSupplyPayload(
+        action=payload_pb2.MetalSupplyPayload.CREATE_AGENT,
         create_agent=action,
         timestamp=timestamp)
     payload_bytes = payload.SerializeToString()
@@ -97,8 +99,8 @@ def make_create_record_transaction(transaction_signer,
         latitude=latitude,
         longitude=longitude)
 
-    payload = payload_pb2.SimpleSupplyPayload(
-        action=payload_pb2.SimpleSupplyPayload.CREATE_RECORD,
+    payload = payload_pb2.MetalSupplyPayload(
+        action=payload_pb2.MetalSupplyPayload.CREATE_RECORD,
         create_record=action,
         timestamp=timestamp)
     payload_bytes = payload.SerializeToString()
@@ -141,8 +143,8 @@ def make_transfer_record_transaction(transaction_signer,
         record_id=record_id,
         receiving_agent=receiving_agent)
 
-    payload = payload_pb2.SimpleSupplyPayload(
-        action=payload_pb2.SimpleSupplyPayload.TRANSFER_RECORD,
+    payload = payload_pb2.MetalSupplyPayload(
+        action=payload_pb2.MetalSupplyPayload.TRANSFER_RECORD,
         transfer_record=action,
         timestamp=timestamp)
     payload_bytes = payload.SerializeToString()
@@ -187,8 +189,8 @@ def make_update_record_location_transaction(transaction_signer,
         latitude=latitude,
         longitude=longitude)
 
-    payload = payload_pb2.SimpleSupplyPayload(
-        action=payload_pb2.SimpleSupplyPayload.UPDATE_RECORD_LOCATION,
+    payload = payload_pb2.MetalSupplyPayload(
+        action=payload_pb2.MetalSupplyPayload.UPDATE_RECORD_LOCATION,
         update_record=action,
         timestamp=timestamp)
     payload_bytes = payload.SerializeToString()

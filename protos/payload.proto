@@ -28,7 +28,7 @@ message MetalSupplyPayload{
 message CreateAgentAction {
     // A human-readable name identifying the new agent
     string name = 1;
-    string role = 2;
+    int32 role = 2;
 }
 
 
