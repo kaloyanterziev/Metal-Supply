@@ -17,8 +17,8 @@ message Record {
 
     message Location {
         // Coordinates are expected to be in millionths of a degree
-        sint64 latitude = 1;
-        sint64 longitude = 2;
+        double latitude = 1;
+        double longitude = 2;
 
         string agent_id = 3;
 

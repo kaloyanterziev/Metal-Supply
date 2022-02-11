@@ -70,9 +70,12 @@ class Messenger(object):
 
     async def send_create_record_transaction(self,
                                              private_key,
+                                             record_id,
                                              latitude,
                                              longitude,
-                                             record_id,
+                                             material_type,
+                                             material_origin,
+                                             contents,
                                              timestamp):
         transaction_signer = self._crypto_factory.new_signer(
             secp256k1.Secp256k1PrivateKey.from_hex(private_key))
@@ -80,9 +83,12 @@ class Messenger(object):
         batch = make_create_record_transaction(
             transaction_signer=transaction_signer,
             batch_signer=self._batch_signer,
+            record_id=record_id,
             latitude=latitude,
             longitude=longitude,
-            record_id=record_id,
+            material_type=material_type,
+            material_origin=material_origin,
+            contents=contents,
             timestamp=timestamp)
         await self._send_and_wait_for_commit(batch)
 

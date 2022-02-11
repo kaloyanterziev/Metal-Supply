@@ -18,7 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=b'\n\"metal_supply_protobuf/record.proto\"\x9a\x03\n\x06Record\x12\x11\n\trecord_id\x18\x01 \x01(\t\x12\x1a\n\x12previous_record_id\x18\x02 \x01(\t\x12\x1d\n\x06owners\x18\x03 \x03(\x0b\x32\r.Record.Owner\x12\x15\n\rmaterial_type\x18\x04 \x01(\t\x12\x17\n\x0fmaterial_origin\x18\x05 \x01(\t\x12!\n\x08\x63ontents\x18\x06 \x03(\x0b\x32\x0f.Record.Content\x12#\n\tlocations\x18\x07 \x03(\x0b\x32\x10.Record.Location\x1a\x46\n\x05Owner\x12\x10\n\x08\x61gent_id\x18\x01 \x01(\t\x12\x18\n\x10percentage_owner\x18\x02 \x01(\x01\x12\x11\n\ttimestamp\x18\x03 \x01(\x04\x1aT\n\x08Location\x12\x10\n\x08latitude\x18\x01 \x01(\x12\x12\x11\n\tlongitude\x18\x02 \x01(\x12\x12\x10\n\x08\x61gent_id\x18\x03 \x01(\t\x12\x11\n\ttimestamp\x18\x04 \x01(\x04\x1a,\n\x07\x43ontent\x12\r\n\x05metal\x18\x01 \x01(\t\x12\x12\n\npercentage\x18\x02 \x01(\x01\"+\n\x0fRecordContainer\x12\x18\n\x07\x65ntries\x18\x01 \x03(\x0b\x32\x07.Recordb\x06proto3'
+  serialized_pb=b'\n\"metal_supply_protobuf/record.proto\"\x9a\x03\n\x06Record\x12\x11\n\trecord_id\x18\x01 \x01(\t\x12\x1a\n\x12previous_record_id\x18\x02 \x01(\t\x12\x1d\n\x06owners\x18\x03 \x03(\x0b\x32\r.Record.Owner\x12\x15\n\rmaterial_type\x18\x04 \x01(\t\x12\x17\n\x0fmaterial_origin\x18\x05 \x01(\t\x12!\n\x08\x63ontents\x18\x06 \x03(\x0b\x32\x0f.Record.Content\x12#\n\tlocations\x18\x07 \x03(\x0b\x32\x10.Record.Location\x1a\x46\n\x05Owner\x12\x10\n\x08\x61gent_id\x18\x01 \x01(\t\x12\x18\n\x10percentage_owner\x18\x02 \x01(\x01\x12\x11\n\ttimestamp\x18\x03 \x01(\x04\x1aT\n\x08Location\x12\x10\n\x08latitude\x18\x01 \x01(\x01\x12\x11\n\tlongitude\x18\x02 \x01(\x01\x12\x10\n\x08\x61gent_id\x18\x03 \x01(\t\x12\x11\n\ttimestamp\x18\x04 \x01(\x04\x1a,\n\x07\x43ontent\x12\r\n\x05metal\x18\x01 \x01(\t\x12\x12\n\npercentage\x18\x02 \x01(\x01\"+\n\x0fRecordContainer\x12\x18\n\x07\x65ntries\x18\x01 \x03(\x0b\x32\x07.Recordb\x06proto3'
 )
 
 
@@ -77,15 +77,15 @@ _RECORD_LOCATION = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='latitude', full_name='Record.Location.latitude', index=0,
-      number=1, type=18, cpp_type=2, label=1,
-      has_default_value=False, default_value=0,
+      number=1, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='longitude', full_name='Record.Location.longitude', index=1,
-      number=2, type=18, cpp_type=2, label=1,
-      has_default_value=False, default_value=0,
+      number=2, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),

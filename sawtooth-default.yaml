@@ -45,7 +45,7 @@ services:
     command: |
       bash -c "
         sleep 1
-        metal-supply-tp -v -C tcp://validator:4004
+        metal-supply-tp -vv -C tcp://validator:4004
       "
 
   settings-tp:

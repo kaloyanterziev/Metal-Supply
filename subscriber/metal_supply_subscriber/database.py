@@ -44,8 +44,8 @@ CREATE TABLE IF NOT EXISTS auth (
 CREATE_RECORD_STMTS = """
 CREATE TABLE IF NOT EXISTS records (
     id                 bigserial PRIMARY KEY,
-    record_id          bigserial,
-    previous_record_id bigserial,
+    record_id          varchar,
+    previous_record_id varchar,
     material_type      varchar,
     material_origin    varchar,
     start_block_num    bigint,
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS records (
 CREATE_RECORD_CONTENT_STMTS = """
 CREATE TABLE IF NOT EXISTS record_contents (
     id               bigserial PRIMARY KEY,
-    record_id        bigserial,
+    record_id        varchar,
     metal            varchar,
     percentage       double precision,
     start_block_num  bigint,
@@ -68,10 +68,10 @@ CREATE TABLE IF NOT EXISTS record_contents (
 CREATE_RECORD_LOCATION_STMTS = """
 CREATE TABLE IF NOT EXISTS record_locations (
     id               bigserial PRIMARY KEY,
-    record_id        bigserial,
-    agent_id         bigserial,
-    latitude         bigint,
-    longitude        bigint,
+    record_id        varchar,
+    agent_id         varchar,
+    latitude         double precision,
+    longitude        double precision,
     timestamp        bigint,
     start_block_num  bigint,
     end_block_num    bigint
@@ -82,9 +82,9 @@ CREATE TABLE IF NOT EXISTS record_locations (
 CREATE_RECORD_OWNER_STMTS = """
 CREATE TABLE IF NOT EXISTS record_owners (
     id                   bigserial PRIMARY KEY,
-    record_id            bigserial,
-    agent_id             bigserial,
-    percentage_ownership double precision,
+    record_id            varchar,
+    agent_id             varchar,
+    percentage_owner     double precision,
     timestamp            bigint,
     start_block_num      bigint,
     end_block_num        bigint
@@ -368,7 +368,7 @@ class Database(object):
             """
             INSERT INTO record_locations (
             record_id,
-            agent_id
+            agent_id,
             latitude,
             longitude,
             timestamp,
@@ -404,7 +404,7 @@ class Database(object):
             INSERT INTO record_owners (
             record_id,
             agent_id,
-            percentage_ownership,
+            percentage_owner,
             timestamp,
             start_block_num,
             end_block_num)
@@ -412,7 +412,7 @@ class Database(object):
             """.format(
                 record_dict['record_id'],
                 owner['agent_id'],
-                owner['percentage_ownership'],
+                owner['percentage_owner'],
                 owner['timestamp'],
                 record_dict['start_block_num'],
                 record_dict['end_block_num'])
@@ -448,6 +448,6 @@ class Database(object):
             for content in record_dict['contents']
         ]
         with self._conn.cursor() as cursor:
-            cursor.execute(update_record_owners)
-            for insert in insert_record_owners:
+            cursor.execute(update_record_contents)
+            for insert in insert_record_contents:
                 cursor.execute(insert)

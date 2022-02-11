@@ -22,6 +22,7 @@ from sawtooth_rest_api.protobuf import transaction_pb2
 from metal_supply_addressing import addresser
 
 from metal_supply_protobuf import payload_pb2
+from metal_supply_protobuf import record_pb2
 
 
 def make_create_agent_transaction(transaction_signer,
@@ -68,17 +69,20 @@ def make_create_agent_transaction(transaction_signer,
 
 def make_create_record_transaction(transaction_signer,
                                    batch_signer,
+                                   record_id,
                                    latitude,
                                    longitude,
-                                   record_id,
+                                   material_type,
+                                   material_origin,
+                                   contents,
                                    timestamp):
     """Make a CreateRecordAction transaction and wrap it in a batch
 
     Args:
         transaction_signer (sawtooth_signing.Signer): The transaction key pair
         batch_signer (sawtooth_signing.Signer): The batch key pair
-        latitude (int): Initial latitude of the record
-        longitude (int): Initial latitude of the record
+        latitude (float): Initial latitude of the record
+        longitude (float): Initial longitude of the record
         record_id (str): Unique ID of the record
         timestamp (int): Unix UTC timestamp of when the agent is created
 
@@ -97,7 +101,11 @@ def make_create_record_transaction(transaction_signer,
     action = payload_pb2.CreateRecordAction(
         record_id=record_id,
         latitude=latitude,
-        longitude=longitude)
+        longitude=longitude,
+        material_type=material_type,
+        material_origin=material_origin,
+        contents=contents)
+    #[record_pb2._RECORD_CONTENT(metal=content['metal'], percentage=content['percentage']) for content in contents])
 
     payload = payload_pb2.MetalSupplyPayload(
         action=payload_pb2.MetalSupplyPayload.CREATE_RECORD,

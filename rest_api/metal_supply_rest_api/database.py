@@ -95,10 +95,11 @@ class Database(object):
 
     async def fetch_agent_resource(self, public_key):
         fetch = """
-        SELECT public_key, name, timestamp FROM agents
-        WHERE public_key='{0}'
-        AND ({1}) >= start_block_num
-        AND ({1}) < end_block_num;
+        SELECT agents.public_key, agents.name, agent_roles.name as role, agents.timestamp FROM agents
+        JOIN agent_roles ON agents.role_id = agent_roles.id
+        WHERE agents.public_key='{0}'
+        AND ({1}) >= agents.start_block_num
+        AND ({1}) < agents.end_block_num;
         """.format(public_key, LATEST_BLOCK_NUM)
 
         async with self._conn.cursor(cursor_factory=RealDictCursor) as cursor:
@@ -107,9 +108,10 @@ class Database(object):
 
     async def fetch_all_agent_resources(self):
         fetch = """
-        SELECT public_key, name, timestamp FROM agents
-        WHERE ({0}) >= start_block_num
-        AND ({0}) < end_block_num;
+        SELECT agents.public_key, agents.name, agent_roles.name as role, agents.timestamp FROM agents
+        JOIN agent_roles ON agents.role_id = agent_roles.id
+        WHERE ({0}) >= agents.start_block_num
+        AND ({0}) < agents.end_block_num;
         """.format(LATEST_BLOCK_NUM)
 
         async with self._conn.cursor(cursor_factory=RealDictCursor) as cursor:

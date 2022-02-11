@@ -99,16 +99,20 @@ class RouteHandler(object):
 
     async def create_record(self, request):
         private_key = await self._authorize(request)
+        record_public_key, _ = self._messenger.get_new_key_pair()
 
         body = await decode_request(request)
-        required_fields = ['latitude', 'longitude', 'record_id']
+        required_fields = ['latitude', 'longitude', 'material_type', 'material_origin', 'contents']
         validate_fields(required_fields, body)
 
         await self._messenger.send_create_record_transaction(
             private_key=private_key,
+            record_id=record_public_key,
             latitude=body.get('latitude'),
             longitude=body.get('longitude'),
-            record_id=body.get('record_id'),
+            material_type=body.get('material_type'),
+            material_origin=body.get('material_origin'),
+            contents=body.get('contents'),
             timestamp=get_time())
 
         return json_response(

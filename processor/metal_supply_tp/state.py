@@ -89,18 +89,18 @@ class MetalSupplyState(object):
 
         Args:
             public_key (str): The public key of the agent creating the record
-            latitude (int): Initial latitude of the record
-            longitude (int): Initial latitude of the record
+            latitude (double): Initial latitude of the record
+            longitude (double): Initial latitude of the record
             record_id (str): Unique ID of the record
             timestamp (int): Unix UTC timestamp of when the agent was created
         """
         address = addresser.get_record_address(record_id)
 
-        contents = [record_pb2.Record.Content(percentage=content.percentage, metal=content.metal) for content in contents]
+        # contents = [record_pb2.Record.Content(percentage=content.percentage, metal=content.metal) for content in contents]
         owner = record_pb2.Record.Owner(
             agent_id=public_key,
             timestamp=timestamp,
-            percentage=100.0)
+            percentage_owner=100.0)
         location = record_pb2.Record.Location(
             latitude=latitude,
             longitude=longitude,

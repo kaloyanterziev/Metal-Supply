@@ -90,14 +90,11 @@ def _create_record(state, public_key, payload):
 
     _validate_latlng(payload.data.latitude, payload.data.longitude)
 
-    context = create_context('secp256k1')
-    record_id = context.new_random_private_key()
-
     state.set_record(
         public_key=public_key,
         latitude=payload.data.latitude,
         longitude=payload.data.longitude,
-        record_id=record_id,
+        record_id=payload.data.record_id,
         material_type=payload.data.material_type,
         material_origin=payload.data.material_origin,
         contents=payload.data.contents,
