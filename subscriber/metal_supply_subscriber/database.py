@@ -271,17 +271,6 @@ class Database(object):
 
         return block
 
-    def fetch_agent_role_id(self, agent):
-        fetch = """
-        SELECT id FROM agent_roles WHERE name = '{}'
-        """.format(agent)
-
-        with self._conn.cursor(cursor_factory=RealDictCursor) as cursor:
-            cursor.execute(fetch)
-            role_id = cursor.fetchone()
-
-        return role_id    
-
     def insert_block(self, block_dict):
         insert = """
         INSERT INTO blocks (
@@ -296,8 +285,6 @@ class Database(object):
             cursor.execute(insert)
 
     def insert_agent(self, agent_dict):
-        role_id = self.fetch_agent_role_id(agent_dict['role'])
-        
         update_agent = """
         UPDATE agents SET end_block_num = {}
         WHERE end_block_num = {} AND public_key = '{}'
@@ -314,11 +301,11 @@ class Database(object):
         timestamp,
         start_block_num,
         end_block_num)
-        VALUES ('{}', '{}', '{}', '{}', '{}', '{}');
+        VALUES ('{}', '{}', (SELECT id FROM agent_roles WHERE name = '{}'), '{}', '{}', '{}');
         """.format(
             agent_dict['public_key'],
             agent_dict['name'],
-            role_id['id'],
+            agent_dict['role'],
             agent_dict['timestamp'],
             agent_dict['start_block_num'],
             agent_dict['end_block_num'])
