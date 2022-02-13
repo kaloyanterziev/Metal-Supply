@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS auth (
 )
 """
 
-# TODO: change record_id to record_name
+
 CREATE_RECORD_STMTS = """
 CREATE TABLE IF NOT EXISTS records (
     id                 bigserial PRIMARY KEY,

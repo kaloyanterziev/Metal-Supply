@@ -98,7 +98,7 @@ class RouteHandler(object):
         return json_response(agent)
 
     async def create_record(self, request):
-        private_key = await self._authorize(request)
+        private_key, _ = await self._authorize(request)
         record_public_key, _ = self._messenger.get_new_key_pair()
 
         body = await decode_request(request)
@@ -124,7 +124,8 @@ class RouteHandler(object):
 
     async def fetch_record(self, request):
         record_id = request.match_info.get('record_id', '')
-        record = await self._database.fetch_record_resource(record_id)
+        _, agent_public_key = await self._authorize(request)
+        record = await self._database.fetch_record_resource(record_id, agent_public_key)
         if record is None:
             raise ApiNotFound(
                 'Record with the record id '
@@ -132,7 +133,7 @@ class RouteHandler(object):
         return json_response(record)
 
     async def transfer_record(self, request):
-        private_key = await self._authorize(request)
+        private_key, _ = await self._authorize(request)
 
         body = await decode_request(request)
         required_fields = ['receiving_agent']
@@ -150,7 +151,7 @@ class RouteHandler(object):
             {'data': 'Transfer record transaction submitted'})
 
     async def update_record_location(self, request):
-        private_key = await self._authorize(request)
+        private_key, _ = await self._authorize(request)
 
         body = await decode_request(request)
         required_fields = ['latitude', 'longitude']
@@ -170,7 +171,7 @@ class RouteHandler(object):
 
     # TODO: finish the update
     async def update_record(self, request):
-        private_key = await self._authorize(request)
+        private_key, _ = await self._authorize(request)
 
         body = await decode_request(request)
         required_fields = ['latitude', 'longitude']
@@ -206,9 +207,10 @@ class RouteHandler(object):
         auth_resource = await self._database.fetch_auth_resource(public_key)
         if auth_resource is None:
             raise ApiUnauthorized('Token is not associated with an agent')
-        return decrypt_private_key(request.app['aes_key'],
+        private_key = decrypt_private_key(request.app['aes_key'],
                                    public_key,
                                    auth_resource['encrypted_private_key'])
+        return private_key, public_key
 
 
 async def decode_request(request):

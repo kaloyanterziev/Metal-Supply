@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------------------
-# Modifications copyright (C) 2021 <Kaloyan Terizev>
+# Modifications copyright (C) 2022 <Kaloyan Terizev>
 
 import asyncio
 import logging
@@ -159,6 +159,44 @@ class Database(object):
 
                 await cursor.execute(fetch_record_owners)
                 record['owners'] = await cursor.fetchall()
+
+                return record
+            except TypeError:
+                return None
+
+    async def fetch_record_resource(self, record_id, agent_id):
+        fetch_record = """
+        SELECT record_id FROM records
+        WHERE record_id='{0}'
+        AND ({1}) >= start_block_num
+        AND ({1}) < end_block_num;
+        """.format(record_id, LATEST_BLOCK_NUM)
+
+        fetch_record_locations = """
+        SELECT latitude, longitude, timestamp FROM record_locations
+        WHERE record_id='{0}'
+        AND agent_id='{1}'
+        AND ({2}) >= start_block_num
+        AND ({2}) < end_block_num;
+        """.format(record_id, agent_id, LATEST_BLOCK_NUM)
+
+        fetch_record_contents = """
+                SELECT metal, percentage FROM record_contents
+                WHERE record_id='{0}'
+                AND ({1}) >= start_block_num
+                AND ({1}) < end_block_num;
+                """.format(record_id, LATEST_BLOCK_NUM)
+
+        async with self._conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            try:
+                await cursor.execute(fetch_record)
+                record = await cursor.fetchone()
+
+                await cursor.execute(fetch_record_locations)
+                record['locations'] = await cursor.fetchall()
+
+                await cursor.execute(fetch_record_contents)
+                record['contents'] = await cursor.fetchall()
 
                 return record
             except TypeError:
