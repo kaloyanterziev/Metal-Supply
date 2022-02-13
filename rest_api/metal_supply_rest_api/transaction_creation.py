@@ -116,6 +116,7 @@ def make_create_record_transaction(transaction_signer,
 def make_transfer_record_transaction(transaction_signer,
                                      batch_signer,
                                      receiving_agent,
+                                     percentage,
                                      record_id,
                                      timestamp):
     """Make a CreateRecordAction transaction and wrap it in a batch
@@ -141,7 +142,8 @@ def make_transfer_record_transaction(transaction_signer,
 
     action = payload_pb2.TransferRecordAction(
         record_id=record_id,
-        receiving_agent=receiving_agent)
+        receiving_agent=receiving_agent,
+        percentage=percentage)
 
     payload = payload_pb2.MetalSupplyPayload(
         action=payload_pb2.MetalSupplyPayload.TRANSFER_RECORD,

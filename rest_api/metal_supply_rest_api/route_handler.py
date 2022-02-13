@@ -137,14 +137,16 @@ class RouteHandler(object):
         private_key, _ = await self._authorize(request)
 
         body = await decode_request(request)
-        required_fields = ['receiving_agent']
+        required_fields = ['receiving_agent', 'percentage']
         validate_fields(required_fields, body)
 
         record_id = request.match_info.get('record_id', '')
+        receiving_agent = await self._database.fetch_agent_public_key(body['receiving_agent'])
 
         await self._messenger.send_transfer_record_transaction(
             private_key=private_key,
-            receiving_agent=body['receiving_agent'],
+            receiving_agent=receiving_agent['public_key'],
+            percentage=body['percentage'],
             record_id=record_id,
             timestamp=get_time())
 

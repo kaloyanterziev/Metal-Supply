@@ -357,12 +357,9 @@ class Database(object):
 
     def _insert_record_owners(self, record_dict):
         update_record_owners = """
-        UPDATE record_owners SET end_block_num = {}
-        WHERE end_block_num = {} AND record_id = '{}';
-        """.format(
-            record_dict['start_block_num'],
-            record_dict['end_block_num'],
-            record_dict['record_id'])
+        DELETE FROM record_owners
+        WHERE record_id = '{}';
+        """.format(record_dict['record_id'])
 
         insert_record_owners = [
             """

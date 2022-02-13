@@ -134,17 +134,17 @@ class MetalSupplyState(object):
 
         sending_owner = next(owner for owner in record.owners if owner.agent_id == sending_agent)
         receiving_owner = next((owner for owner in record.owners if owner.agent_id == receiving_agent), None)
-        receiving_percentage = percentage * sending_owner.percentage / 100.0
-        sending_owner.percentage -= receiving_percentage
+        receiving_percentage = percentage * sending_owner.percentage_owner / 100.0
+        sending_owner.percentage_owner -= receiving_percentage
 
         if receiving_owner is None :
             owner = record_pb2.Record.Owner(
                 agent_id=receiving_agent,
                 timestamp=timestamp,
-                percentage=receiving_percentage)
+                percentage_owner=receiving_percentage)
             record.owners.extend([owner])
         else:
-            receiving_owner.percentage += receiving_percentage
+            receiving_owner.percentage_owner += receiving_percentage
 
 
         data = container.SerializeToString()

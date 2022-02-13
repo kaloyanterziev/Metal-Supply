@@ -87,6 +87,7 @@ class Messenger(object):
     async def send_transfer_record_transaction(self,
                                                private_key,
                                                receiving_agent,
+                                               percentage,
                                                record_id,
                                                timestamp):
         transaction_signer = self._crypto_factory.new_signer(
@@ -96,6 +97,7 @@ class Messenger(object):
             transaction_signer=transaction_signer,
             batch_signer=self._batch_signer,
             receiving_agent=receiving_agent,
+            percentage=percentage,
             record_id=record_id,
             timestamp=timestamp)
         await self._send_and_wait_for_commit(batch)

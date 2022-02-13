@@ -58,4 +58,6 @@ message TransferRecordAction {
 
     // The public key of the agent to which the record will be transferred
     string receiving_agent = 2;
+
+    double percentage = 3;
 }
