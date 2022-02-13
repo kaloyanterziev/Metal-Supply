@@ -102,6 +102,26 @@ class Messenger(object):
             timestamp=timestamp)
         await self._send_and_wait_for_commit(batch)
 
+    async def send_update_record_location_transaction(self,
+                                             private_key,
+                                             public_key,
+                                             latitude,
+                                             longitude,
+                                             record_id,
+                                             timestamp):
+        transaction_signer = self._crypto_factory.new_signer(
+            secp256k1.Secp256k1PrivateKey.from_hex(private_key))
+        batch = make_update_record_location_transaction(
+            transaction_signer=transaction_signer,
+            batch_signer=self._batch_signer,
+            agent_key=public_key,
+            latitude=latitude,
+            longitude=longitude,
+            record_id=record_id,
+            timestamp=timestamp)
+        await self._send_and_wait_for_commit(batch)
+
+    # TODO: finish update
     async def send_update_record_transaction(self,
                                              private_key,
                                              latitude,

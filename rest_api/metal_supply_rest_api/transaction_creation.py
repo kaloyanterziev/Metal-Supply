@@ -161,6 +161,7 @@ def make_transfer_record_transaction(transaction_signer,
 
 def make_update_record_location_transaction(transaction_signer,
                                    batch_signer,
+                                   agent_key,
                                    latitude,
                                    longitude,
                                    record_id,
@@ -186,14 +187,15 @@ def make_update_record_location_transaction(transaction_signer,
 
     outputs = [record_address]
 
-    action = payload_pb2.UpdateRecordAction(
+    action = payload_pb2.UpdateRecordLocationAction(
         record_id=record_id,
         latitude=latitude,
-        longitude=longitude)
+        longitude=longitude,
+        agent_id=agent_key)
 
     payload = payload_pb2.MetalSupplyPayload(
         action=payload_pb2.MetalSupplyPayload.UPDATE_RECORD_LOCATION,
-        update_record=action,
+        update_record_location=action,
         timestamp=timestamp)
     payload_bytes = payload.SerializeToString()
 

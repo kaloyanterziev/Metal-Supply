@@ -154,7 +154,7 @@ class RouteHandler(object):
             {'data': 'Transfer record transaction submitted'})
 
     async def update_record_location(self, request):
-        private_key, _ = await self._authorize(request)
+        private_key, public_key = await self._authorize(request)
 
         body = await decode_request(request)
         required_fields = ['latitude', 'longitude']
@@ -164,6 +164,7 @@ class RouteHandler(object):
 
         await self._messenger.send_update_record_location_transaction(
             private_key=private_key,
+            public_key=public_key,
             latitude=body['latitude'],
             longitude=body['longitude'],
             record_id=record_id,
