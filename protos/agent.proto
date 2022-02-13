@@ -11,14 +11,11 @@ message Agent {
     // The agent's unique public key
     string public_key = 1;
 
-    // A human-readable name identifying the agent
-    string name = 2;
-
     // Whether the Agent is recycler, converter or waste owner
-    Role role = 3;
+    Role role = 2;
 
     // Approximately when the agent was registered, as a Unix UTC timestamp
-    uint64 timestamp = 4;
+    uint64 timestamp = 3;
 }
 
 

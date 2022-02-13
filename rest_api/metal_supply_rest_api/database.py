@@ -93,6 +93,20 @@ class Database(object):
 
         self._conn.commit()
 
+    async def create_agent_entry(self, public_key, name):
+        insert = """
+                INSERT INTO agents (
+                    public_key,
+                    name
+                )
+                VALUES ('{}', '{}');
+                """.format(
+            public_key, name)
+        async with self._conn.cursor() as cursor:
+            await cursor.execute(insert)
+
+        self._conn.commit()
+
     async def fetch_agent_resource(self, public_key):
         fetch = """
         SELECT agents.public_key, agents.name, agent_roles.name as role, agents.timestamp FROM agents

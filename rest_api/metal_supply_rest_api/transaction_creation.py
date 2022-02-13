@@ -27,7 +27,6 @@ from metal_supply_protobuf import record_pb2
 
 def make_create_agent_transaction(transaction_signer,
                                   batch_signer,
-                                  name,
                                   role,
                                   timestamp):
     """Make a CreateAgentAction transaction and wrap it in a batch
@@ -51,7 +50,7 @@ def make_create_agent_transaction(transaction_signer,
 
     outputs = [agent_address]
 
-    action = payload_pb2.CreateAgentAction(name=name, role=role)
+    action = payload_pb2.CreateAgentAction(role=role)
 
     payload = payload_pb2.MetalSupplyPayload(
         action=payload_pb2.MetalSupplyPayload.CREATE_AGENT,

@@ -18,7 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=b'\n!metal_supply_protobuf/agent.proto\"\x8d\x01\n\x05\x41gent\x12\x12\n\npublic_key\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x19\n\x04role\x18\x03 \x01(\x0e\x32\x0b.Agent.Role\x12\x11\n\ttimestamp\x18\x04 \x01(\x04\"4\n\x04Role\x12\x0c\n\x08RECYCLER\x10\x00\x12\r\n\tCONVERTER\x10\x01\x12\x0f\n\x0bWASTE_OWNER\x10\x02\")\n\x0e\x41gentContainer\x12\x17\n\x07\x65ntries\x18\x01 \x03(\x0b\x32\x06.Agentb\x06proto3'
+  serialized_pb=b'\n!metal_supply_protobuf/agent.proto\"\x7f\n\x05\x41gent\x12\x12\n\npublic_key\x18\x01 \x01(\t\x12\x19\n\x04role\x18\x02 \x01(\x0e\x32\x0b.Agent.Role\x12\x11\n\ttimestamp\x18\x03 \x01(\x04\"4\n\x04Role\x12\x0c\n\x08RECYCLER\x10\x00\x12\r\n\tCONVERTER\x10\x01\x12\x0f\n\x0bWASTE_OWNER\x10\x02\")\n\x0e\x41gentContainer\x12\x17\n\x07\x65ntries\x18\x01 \x03(\x0b\x32\x06.Agentb\x06proto3'
 )
 
 
@@ -44,8 +44,8 @@ _AGENT_ROLE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=127,
-  serialized_end=179,
+  serialized_start=112,
+  serialized_end=164,
 )
 _sym_db.RegisterEnumDescriptor(_AGENT_ROLE)
 
@@ -65,22 +65,15 @@ _AGENT = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='name', full_name='Agent.name', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='role', full_name='Agent.role', index=2,
-      number=3, type=14, cpp_type=8, label=1,
+      name='role', full_name='Agent.role', index=1,
+      number=2, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='timestamp', full_name='Agent.timestamp', index=3,
-      number=4, type=4, cpp_type=4, label=1,
+      name='timestamp', full_name='Agent.timestamp', index=2,
+      number=3, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -98,8 +91,8 @@ _AGENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=38,
-  serialized_end=179,
+  serialized_start=37,
+  serialized_end=164,
 )
 
 
@@ -129,8 +122,8 @@ _AGENTCONTAINER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=181,
-  serialized_end=222,
+  serialized_start=166,
+  serialized_end=207,
 )
 
 _AGENT.fields_by_name['role'].enum_type = _AGENT_ROLE

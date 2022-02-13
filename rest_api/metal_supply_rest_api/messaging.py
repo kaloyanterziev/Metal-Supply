@@ -54,7 +54,6 @@ class Messenger(object):
 
     async def send_create_agent_transaction(self,
                                             private_key,
-                                            name,
                                             role,
                                             timestamp):
         transaction_signer = self._crypto_factory.new_signer(
@@ -63,7 +62,6 @@ class Messenger(object):
         batch = make_create_agent_transaction(
             transaction_signer=transaction_signer,
             batch_signer=self._batch_signer,
-            name=name,
             role=role,
             timestamp=timestamp)
         await self._send_and_wait_for_commit(batch)

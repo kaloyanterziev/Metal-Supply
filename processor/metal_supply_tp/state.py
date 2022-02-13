@@ -30,7 +30,7 @@ class MetalSupplyState(object):
 
         return None
 
-    def set_agent(self, public_key, name, role, timestamp):
+    def set_agent(self, public_key, role, timestamp):
         """Creates a new agent in state
 
         Args:
@@ -41,7 +41,7 @@ class MetalSupplyState(object):
         """
         address = addresser.get_agent_address(public_key)
         agent = agent_pb2.Agent(
-            public_key=public_key, name=name, role=role, timestamp=timestamp)
+            public_key=public_key, role=role, timestamp=timestamp)
         container = agent_pb2.AgentContainer()
         state_entries = self._context.get_state(
             addresses=[address], timeout=self._timeout)
@@ -96,7 +96,6 @@ class MetalSupplyState(object):
         """
         address = addresser.get_record_address(record_id)
 
-        # contents = [record_pb2.Record.Content(percentage=content.percentage, metal=content.metal) for content in contents]
         owner = record_pb2.Record.Owner(
             agent_id=public_key,
             timestamp=timestamp,

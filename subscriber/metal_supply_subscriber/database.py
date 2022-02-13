@@ -286,38 +286,25 @@ class Database(object):
 
     def insert_agent(self, agent_dict):
         update_agent = """
-        UPDATE agents SET end_block_num = {}
-        WHERE end_block_num = {} AND public_key = '{}'
+        UPDATE agents SET 
+        role_id = (SELECT id FROM agent_roles WHERE name = '{}'),
+        timestamp = '{}',
+        start_block_num = '{}',
+        end_block_num = '{}'
+        WHERE public_key = '{}';
         """.format(
-            agent_dict['start_block_num'],
-            agent_dict['end_block_num'],
-            agent_dict['public_key'])
-
-        insert_agent = """
-        INSERT INTO agents (
-        public_key,
-        name,
-        role_id,
-        timestamp,
-        start_block_num,
-        end_block_num)
-        VALUES ('{}', '{}', (SELECT id FROM agent_roles WHERE name = '{}'), '{}', '{}', '{}');
-        """.format(
-            agent_dict['public_key'],
-            agent_dict['name'],
             agent_dict['role'],
             agent_dict['timestamp'],
             agent_dict['start_block_num'],
-            agent_dict['end_block_num'])
-        print("AGENT_DICT", agent_dict)
+            agent_dict['end_block_num'],
+            agent_dict['public_key'])
         with self._conn.cursor() as cursor:
             cursor.execute(update_agent)
-            cursor.execute(insert_agent)
 
     def insert_record(self, record_dict):
         update_record = """
         UPDATE records SET end_block_num = {}
-        WHERE end_block_num = {} AND record_id = '{}'
+        WHERE end_block_num = {} AND record_id = '{}';
         """.format(
             record_dict['start_block_num'],
             record_dict['end_block_num'],
@@ -345,7 +332,7 @@ class Database(object):
     def _insert_record_locations(self, record_dict):
         update_record_locations = """
         UPDATE record_locations SET end_block_num = {}
-        WHERE end_block_num = {} AND record_id = '{}'
+        WHERE end_block_num = {} AND record_id = '{}';
         """.format(
             record_dict['start_block_num'],
             record_dict['end_block_num'],
@@ -380,7 +367,7 @@ class Database(object):
     def _insert_record_owners(self, record_dict):
         update_record_owners = """
         UPDATE record_owners SET end_block_num = {}
-        WHERE end_block_num = {} AND record_id = '{}'
+        WHERE end_block_num = {} AND record_id = '{}';
         """.format(
             record_dict['start_block_num'],
             record_dict['end_block_num'],
@@ -413,7 +400,7 @@ class Database(object):
     def _insert_record_contents(self, record_dict):
         update_record_contents = """
         UPDATE record_contents SET end_block_num = {}
-        WHERE end_block_num = {} AND record_id = '{}'
+        WHERE end_block_num = {} AND record_id = '{}';
         """.format(
             record_dict['start_block_num'],
             record_dict['end_block_num'],
