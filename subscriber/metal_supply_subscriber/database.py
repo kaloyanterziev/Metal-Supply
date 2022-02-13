@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS record_locations (
     agent_id         varchar,
     latitude         double precision,
     longitude        double precision,
+    public           boolean,
     timestamp        bigint,
     start_block_num  bigint,
     end_block_num    bigint
@@ -85,6 +86,7 @@ CREATE TABLE IF NOT EXISTS record_owners (
     record_id            varchar,
     agent_id             varchar,
     percentage_owner     double precision,
+    public               boolean,
     timestamp            bigint,
     start_block_num      bigint,
     end_block_num        bigint
@@ -303,31 +305,20 @@ class Database(object):
 
     def insert_record(self, record_dict):
         update_record = """
-        UPDATE records SET end_block_num = {}
-        WHERE end_block_num = {} AND record_id = '{}';
+        UPDATE records 
+        SET start_block_num = {},
+        end_block_num = {}
+        WHERE record_id = '{}';
         """.format(
             record_dict['start_block_num'],
             record_dict['end_block_num'],
             record_dict['record_id'])
 
-        insert_record = """
-        INSERT INTO records (
-        record_id,
-        start_block_num,
-        end_block_num)
-        VALUES ('{}', '{}', '{}');
-        """.format(
-            record_dict['record_id'],
-            record_dict['start_block_num'],
-            record_dict['end_block_num'])
-
         with self._conn.cursor() as cursor:
             cursor.execute(update_record)
-            cursor.execute(insert_record)
 
         self._insert_record_locations(record_dict)
         self._insert_record_owners(record_dict)
-        self._insert_record_contents(record_dict)
 
     def _insert_record_locations(self, record_dict):
         update_record_locations = """
@@ -395,33 +386,4 @@ class Database(object):
         with self._conn.cursor() as cursor:
             cursor.execute(update_record_owners)
             for insert in insert_record_owners:
-                cursor.execute(insert)
-
-    def _insert_record_contents(self, record_dict):
-        update_record_contents = """
-        UPDATE record_contents SET end_block_num = {}
-        WHERE end_block_num = {} AND record_id = '{}';
-        """.format(
-            record_dict['start_block_num'],
-            record_dict['end_block_num'],
-            record_dict['record_id'])
-
-        insert_record_contents = [
-            """
-            INSERT INTO record_contents (
-            metal,
-            percentage,
-            start_block_num,
-            end_block_num)
-            VALUES ('{}', '{}', '{}', '{}');
-            """.format(
-                content['metal'],
-                content['percentage'],
-                record_dict['start_block_num'],
-                record_dict['end_block_num'])
-            for content in record_dict['contents']
-        ]
-        with self._conn.cursor() as cursor:
-            cursor.execute(update_record_contents)
-            for insert in insert_record_contents:
                 cursor.execute(insert)

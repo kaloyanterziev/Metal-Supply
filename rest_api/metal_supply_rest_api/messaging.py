@@ -71,9 +71,6 @@ class Messenger(object):
                                              record_id,
                                              latitude,
                                              longitude,
-                                             material_type,
-                                             material_origin,
-                                             contents,
                                              timestamp):
         transaction_signer = self._crypto_factory.new_signer(
             secp256k1.Secp256k1PrivateKey.from_hex(private_key))
@@ -84,9 +81,6 @@ class Messenger(object):
             record_id=record_id,
             latitude=latitude,
             longitude=longitude,
-            material_type=material_type,
-            material_origin=material_origin,
-            contents=contents,
             timestamp=timestamp)
         await self._send_and_wait_for_commit(batch)
 

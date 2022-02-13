@@ -71,9 +71,6 @@ def make_create_record_transaction(transaction_signer,
                                    record_id,
                                    latitude,
                                    longitude,
-                                   material_type,
-                                   material_origin,
-                                   contents,
                                    timestamp):
     """Make a CreateRecordAction transaction and wrap it in a batch
 
@@ -100,11 +97,7 @@ def make_create_record_transaction(transaction_signer,
     action = payload_pb2.CreateRecordAction(
         record_id=record_id,
         latitude=latitude,
-        longitude=longitude,
-        material_type=material_type,
-        material_origin=material_origin,
-        contents=contents)
-    #[record_pb2._RECORD_CONTENT(metal=content['metal'], percentage=content['percentage']) for content in contents])
+        longitude=longitude)
 
     payload = payload_pb2.MetalSupplyPayload(
         action=payload_pb2.MetalSupplyPayload.CREATE_RECORD,

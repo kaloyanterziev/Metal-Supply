@@ -94,9 +94,6 @@ def _create_record(state, public_key, payload):
         latitude=payload.data.latitude,
         longitude=payload.data.longitude,
         record_id=payload.data.record_id,
-        material_type=payload.data.material_type,
-        material_origin=payload.data.material_origin,
-        contents=payload.data.contents,
         timestamp=payload.timestamp)
 
 

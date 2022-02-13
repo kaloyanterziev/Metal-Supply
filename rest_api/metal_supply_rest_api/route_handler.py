@@ -106,14 +106,14 @@ class RouteHandler(object):
         required_fields = ['latitude', 'longitude', 'material_type', 'material_origin', 'contents']
         validate_fields(required_fields, body)
 
+        await self._database.create_record_entry(record_public_key, body.get('material_type'),
+                                                 body.get('material_origin'), body.get('contents'))
+
         await self._messenger.send_create_record_transaction(
             private_key=private_key,
             record_id=record_public_key,
             latitude=body.get('latitude'),
             longitude=body.get('longitude'),
-            material_type=body.get('material_type'),
-            material_origin=body.get('material_origin'),
-            contents=body.get('contents'),
             timestamp=get_time())
 
         return json_response(

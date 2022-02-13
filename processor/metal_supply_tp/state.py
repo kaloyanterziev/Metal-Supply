@@ -81,9 +81,6 @@ class MetalSupplyState(object):
                    latitude,
                    longitude,
                    record_id,
-                   material_type,
-                   material_origin,
-                   contents,
                    timestamp):
         """Creates a new record in state
 
@@ -108,10 +105,7 @@ class MetalSupplyState(object):
         record = record_pb2.Record(
             record_id=record_id,
             owners=[owner],
-            locations=[location],
-            material_type=material_type,
-            material_origin=material_origin,
-            contents=contents)
+            locations=[location])
         container = record_pb2.RecordContainer()
         state_entries = self._context.get_state(
             addresses=[address], timeout=self._timeout)

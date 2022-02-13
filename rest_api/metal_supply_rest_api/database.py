@@ -141,6 +141,38 @@ class Database(object):
             await cursor.execute(fetch)
             return await cursor.fetchone()
 
+    async def create_record_entry(self, record_public_key, material_type, material_origin, contents):
+        insert_records = """
+            INSERT INTO records (
+                record_id,
+                material_type,
+                material_origin
+            )
+            VALUES ('{}', '{}', '{}');
+        """.format(record_public_key, material_type, material_origin)
+
+        insert_record_contents = [
+            """
+            INSERT INTO record_contents (
+            record_id,
+            metal,
+            percentage)
+            VALUES ('{}', '{}', '{}');
+            """.format(
+                record_public_key,
+                content['metal'],
+                content['percentage'])
+            for content in contents
+        ]
+        logging.debug(insert_records)
+        logging.debug(insert_record_contents)
+        async with self._conn.cursor() as cursor:
+            await cursor.execute(insert_records)
+            for insert in insert_record_contents:
+                await cursor.execute(insert)
+
+        self._conn.commit()
+
     async def fetch_record_resource(self, record_id):
         fetch_record = """
         SELECT record_id FROM records
@@ -180,7 +212,7 @@ class Database(object):
 
     async def fetch_record_resource(self, record_id, agent_id):
         fetch_record = """
-        SELECT record_id FROM records
+        SELECT record_id, material_type, material_origin FROM records
         WHERE record_id='{0}'
         AND ({1}) >= start_block_num
         AND ({1}) < end_block_num;
@@ -196,9 +228,7 @@ class Database(object):
 
         fetch_record_contents = """
                 SELECT metal, percentage FROM record_contents
-                WHERE record_id='{0}'
-                AND ({1}) >= start_block_num
-                AND ({1}) < end_block_num;
+                WHERE record_id='{0}';
                 """.format(record_id, LATEST_BLOCK_NUM)
 
         async with self._conn.cursor(cursor_factory=RealDictCursor) as cursor:

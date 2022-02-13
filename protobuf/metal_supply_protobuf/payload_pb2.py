@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=b'\n#metal_supply_protobuf/payload.proto\x1a\"metal_supply_protobuf/record.proto\"\xe4\x02\n\x12MetalSupplyPayload\x12*\n\x06\x61\x63tion\x18\x01 \x01(\x0e\x32\x1a.MetalSupplyPayload.Action\x12(\n\x0c\x63reate_agent\x18\x02 \x01(\x0b\x32\x12.CreateAgentAction\x12*\n\rcreate_record\x18\x03 \x01(\x0b\x32\x13.CreateRecordAction\x12\x32\n\rupdate_record\x18\x04 \x01(\x0b\x32\x1b.UpdateRecordLocationAction\x12.\n\x0ftransfer_record\x18\x05 \x01(\x0b\x32\x15.TransferRecordAction\x12\x11\n\ttimestamp\x18\x06 \x01(\x04\"U\n\x06\x41\x63tion\x12\x10\n\x0c\x43REATE_AGENT\x10\x00\x12\x11\n\rCREATE_RECORD\x10\x01\x12\x11\n\rUPDATE_RECORD\x10\x02\x12\x13\n\x0fTRANSFER_RECORD\x10\x03\"/\n\x11\x43reateAgentAction\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04role\x18\x02 \x01(\x05\"\x9f\x01\n\x12\x43reateRecordAction\x12\x11\n\trecord_id\x18\x01 \x01(\t\x12\x10\n\x08latitude\x18\x02 \x01(\x01\x12\x11\n\tlongitude\x18\x03 \x01(\x01\x12\x15\n\rmaterial_type\x18\x04 \x01(\t\x12\x17\n\x0fmaterial_origin\x18\x05 \x01(\t\x12!\n\x08\x63ontents\x18\x06 \x03(\x0b\x32\x0f.Record.Content\"f\n\x1aUpdateRecordLocationAction\x12\x11\n\trecord_id\x18\x01 \x01(\t\x12\x10\n\x08latitude\x18\x02 \x01(\x12\x12\x11\n\tlongitude\x18\x03 \x01(\x12\x12\x10\n\x08\x61gent_id\x18\x04 \x01(\t\"B\n\x14TransferRecordAction\x12\x11\n\trecord_id\x18\x01 \x01(\t\x12\x17\n\x0freceiving_agent\x18\x02 \x01(\tb\x06proto3'
+  serialized_pb=b'\n#metal_supply_protobuf/payload.proto\x1a\"metal_supply_protobuf/record.proto\"\xe4\x02\n\x12MetalSupplyPayload\x12*\n\x06\x61\x63tion\x18\x01 \x01(\x0e\x32\x1a.MetalSupplyPayload.Action\x12(\n\x0c\x63reate_agent\x18\x02 \x01(\x0b\x32\x12.CreateAgentAction\x12*\n\rcreate_record\x18\x03 \x01(\x0b\x32\x13.CreateRecordAction\x12\x32\n\rupdate_record\x18\x04 \x01(\x0b\x32\x1b.UpdateRecordLocationAction\x12.\n\x0ftransfer_record\x18\x05 \x01(\x0b\x32\x15.TransferRecordAction\x12\x11\n\ttimestamp\x18\x06 \x01(\x04\"U\n\x06\x41\x63tion\x12\x10\n\x0c\x43REATE_AGENT\x10\x00\x12\x11\n\rCREATE_RECORD\x10\x01\x12\x11\n\rUPDATE_RECORD\x10\x02\x12\x13\n\x0fTRANSFER_RECORD\x10\x03\"/\n\x11\x43reateAgentAction\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04role\x18\x02 \x01(\x05\"L\n\x12\x43reateRecordAction\x12\x11\n\trecord_id\x18\x01 \x01(\t\x12\x10\n\x08latitude\x18\x02 \x01(\x01\x12\x11\n\tlongitude\x18\x03 \x01(\x01\"f\n\x1aUpdateRecordLocationAction\x12\x11\n\trecord_id\x18\x01 \x01(\t\x12\x10\n\x08latitude\x18\x02 \x01(\x12\x12\x11\n\tlongitude\x18\x03 \x01(\x12\x12\x10\n\x08\x61gent_id\x18\x04 \x01(\t\"B\n\x14TransferRecordAction\x12\x11\n\trecord_id\x18\x01 \x01(\t\x12\x17\n\x0freceiving_agent\x18\x02 \x01(\tb\x06proto3'
   ,
   dependencies=[metal__supply__protobuf_dot_record__pb2.DESCRIPTOR,])
 
@@ -189,27 +189,6 @@ _CREATERECORDACTION = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='material_type', full_name='CreateRecordAction.material_type', index=3,
-      number=4, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='material_origin', full_name='CreateRecordAction.material_origin', index=4,
-      number=5, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='contents', full_name='CreateRecordAction.contents', index=5,
-      number=6, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -222,8 +201,8 @@ _CREATERECORDACTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=484,
-  serialized_end=643,
+  serialized_start=483,
+  serialized_end=559,
 )
 
 
@@ -274,8 +253,8 @@ _UPDATERECORDLOCATIONACTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=645,
-  serialized_end=747,
+  serialized_start=561,
+  serialized_end=663,
 )
 
 
@@ -312,8 +291,8 @@ _TRANSFERRECORDACTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=749,
-  serialized_end=815,
+  serialized_start=665,
+  serialized_end=731,
 )
 
 _METALSUPPLYPAYLOAD.fields_by_name['action'].enum_type = _METALSUPPLYPAYLOAD_ACTION
@@ -322,7 +301,6 @@ _METALSUPPLYPAYLOAD.fields_by_name['create_record'].message_type = _CREATERECORD
 _METALSUPPLYPAYLOAD.fields_by_name['update_record'].message_type = _UPDATERECORDLOCATIONACTION
 _METALSUPPLYPAYLOAD.fields_by_name['transfer_record'].message_type = _TRANSFERRECORDACTION
 _METALSUPPLYPAYLOAD_ACTION.containing_type = _METALSUPPLYPAYLOAD
-_CREATERECORDACTION.fields_by_name['contents'].message_type = metal__supply__protobuf_dot_record__pb2._RECORD_CONTENT
 DESCRIPTOR.message_types_by_name['MetalSupplyPayload'] = _METALSUPPLYPAYLOAD
 DESCRIPTOR.message_types_by_name['CreateAgentAction'] = _CREATEAGENTACTION
 DESCRIPTOR.message_types_by_name['CreateRecordAction'] = _CREATERECORDACTION
