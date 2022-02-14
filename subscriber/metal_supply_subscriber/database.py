@@ -48,6 +48,8 @@ CREATE TABLE IF NOT EXISTS records (
     previous_record_id varchar,
     material_type      varchar,
     material_origin    varchar,
+    tonnes             double precision,
+    public             boolean,
     start_block_num    bigint,
     end_block_num      bigint
 );

@@ -91,11 +91,11 @@ class RouteHandler(object):
         return json_response(agent_list)
 
     async def fetch_agent(self, request):
-        public_key = request.match_info.get('agent_id', '')
-        agent = await self._database.fetch_agent_resource(public_key)
+        agent_id = request.match_info.get('agent_id', '')
+        agent = await self._database.fetch_agent_resource(agent_id)
         if agent is None:
             raise ApiNotFound(
-                'Agent with public key {} was not found'.format(public_key))
+                'Agent with public key {} was not found'.format(agent_id))
         return json_response(agent)
 
     async def create_record(self, request):
@@ -103,11 +103,12 @@ class RouteHandler(object):
         record_public_key, _ = self._messenger.get_new_key_pair()
 
         body = await decode_request(request)
-        required_fields = ['latitude', 'longitude', 'material_type', 'material_origin', 'contents']
+        required_fields = ['latitude', 'longitude', 'material_type', 'material_origin', 'contents', 'tonnes']
         validate_fields(required_fields, body)
 
         await self._database.create_record_entry(record_public_key, body.get('material_type'),
-                                                 body.get('material_origin'), body.get('contents'))
+                                                 body.get('material_origin'), body.get('tonnes'), body.get('contents'),
+                                                 body.get('public', False))
 
         await self._messenger.send_create_record_transaction(
             private_key=private_key,
@@ -125,8 +126,9 @@ class RouteHandler(object):
 
     async def fetch_record(self, request):
         record_id = request.match_info.get('record_id', '')
+        record_public_key = (await self._database.fetch_record_public_key(record_id))['record_id']
         _, agent_public_key = await self._authorize(request)
-        record = await self._database.fetch_record_resource(record_id, agent_public_key)
+        record = await self._database.fetch_record_resource(record_public_key, agent_public_key)
         if record is None:
             raise ApiNotFound(
                 'Record with the record id '
@@ -141,13 +143,14 @@ class RouteHandler(object):
         validate_fields(required_fields, body)
 
         record_id = request.match_info.get('record_id', '')
+        record_public_key = (await self._database.fetch_record_public_key(record_id))['record_id']
         receiving_agent = await self._database.fetch_agent_public_key(body['receiving_agent'])
 
         await self._messenger.send_transfer_record_transaction(
             private_key=private_key,
             receiving_agent=receiving_agent['public_key'],
             percentage=body['percentage'],
-            record_id=record_id,
+            record_id=record_public_key,
             timestamp=get_time())
 
         return json_response(
@@ -161,13 +164,14 @@ class RouteHandler(object):
         validate_fields(required_fields, body)
 
         record_id = request.match_info.get('record_id', '')
+        record_public_key = (await self._database.fetch_record_public_key(record_id))['record_id']
 
         await self._messenger.send_update_record_location_transaction(
             private_key=private_key,
             public_key=public_key,
             latitude=body['latitude'],
             longitude=body['longitude'],
-            record_id=record_id,
+            record_id=record_public_key,
             timestamp=get_time())
 
         return json_response(
@@ -182,12 +186,13 @@ class RouteHandler(object):
         validate_fields(required_fields, body)
 
         record_id = request.match_info.get('record_id', '')
+        record_public_key = (await self._database.fetch_record_public_key(record_id))['record_id']
 
         await self._messenger.send_update_record_location_transaction(
             private_key=private_key,
             latitude=body['latitude'],
             longitude=body['longitude'],
-            record_id=record_id,
+            record_id=record_public_key,
             timestamp=get_time())
 
         return json_response(

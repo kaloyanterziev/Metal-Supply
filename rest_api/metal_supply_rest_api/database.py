@@ -107,14 +107,14 @@ class Database(object):
 
         self._conn.commit()
 
-    async def fetch_agent_resource(self, public_key):
+    async def fetch_agent_resource(self, agent_id):
         fetch = """
-        SELECT agents.public_key, agents.name, agent_roles.name as role, agents.timestamp FROM agents
+        SELECT agents.id, agents.name, agent_roles.name as role, agents.timestamp FROM agents
         JOIN agent_roles ON agents.role_id = agent_roles.id
-        WHERE agents.public_key='{0}'
+        WHERE agents.id='{0}'
         AND ({1}) >= agents.start_block_num
         AND ({1}) < agents.end_block_num;
-        """.format(public_key, LATEST_BLOCK_NUM)
+        """.format(agent_id, LATEST_BLOCK_NUM)
 
         async with self._conn.cursor(cursor_factory=RealDictCursor) as cursor:
             await cursor.execute(fetch)
@@ -151,15 +151,27 @@ class Database(object):
             await cursor.execute(fetch)
             return await cursor.fetchone()
 
-    async def create_record_entry(self, record_public_key, material_type, material_origin, contents):
+    async def fetch_record_public_key(self, record_id):
+        fetch = """
+                   SELECT record_id 
+                   FROM records
+                   WHERE id = {0};
+               """.format(record_id)
+        async with self._conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            await cursor.execute(fetch)
+            return await cursor.fetchone()
+
+    async def create_record_entry(self, record_public_key, material_type, material_origin, tonnes, contents, public):
         insert_records = """
             INSERT INTO records (
                 record_id,
                 material_type,
-                material_origin
+                material_origin,
+                tonnes,
+                public
             )
-            VALUES ('{}', '{}', '{}');
-        """.format(record_public_key, material_type, material_origin)
+            VALUES ('{}', '{}', '{}', '{}', '{}');
+        """.format(record_public_key, material_type, material_origin, tonnes, public)
 
         insert_record_contents = [
             """
@@ -183,6 +195,7 @@ class Database(object):
 
         self._conn.commit()
 
+    #TODO: delete
     async def fetch_record_resource(self, record_id):
         fetch_record = """
         SELECT record_id FROM records
@@ -199,7 +212,7 @@ class Database(object):
         """.format(record_id, LATEST_BLOCK_NUM)
 
         fetch_record_owners = """
-        SELECT agent_id, timestamp FROM record_owners
+        SELECT id, percentage_owner FROM record_owners
         WHERE record_id='{0}'
         AND ({1}) >= start_block_num
         AND ({1}) < end_block_num;
@@ -220,13 +233,13 @@ class Database(object):
             except TypeError:
                 return None
 
-    async def fetch_record_resource(self, record_id, agent_id):
+    async def fetch_record_resource(self, record_public_key, agent_id):
         fetch_record = """
-        SELECT record_id, material_type, material_origin FROM records
+        SELECT id, material_type, material_origin, tonnes FROM records
         WHERE record_id='{0}'
         AND ({1}) >= start_block_num
         AND ({1}) < end_block_num;
-        """.format(record_id, LATEST_BLOCK_NUM)
+        """.format(record_public_key, LATEST_BLOCK_NUM)
 
         fetch_record_locations = """
         SELECT latitude, longitude, timestamp FROM record_locations
@@ -234,12 +247,20 @@ class Database(object):
         AND agent_id='{1}'
         AND ({2}) >= start_block_num
         AND ({2}) < end_block_num;
-        """.format(record_id, agent_id, LATEST_BLOCK_NUM)
+        """.format(record_public_key, agent_id, LATEST_BLOCK_NUM)
 
         fetch_record_contents = """
                 SELECT metal, percentage FROM record_contents
                 WHERE record_id='{0}';
-                """.format(record_id, LATEST_BLOCK_NUM)
+                """.format(record_public_key, LATEST_BLOCK_NUM)
+
+        fetch_record_ownership = """
+                SELECT percentage_owner FROM record_owners
+                WHERE record_id='{0}'
+                AND agent_id='{1}'
+                AND ({2}) >= start_block_num
+                AND ({2}) < end_block_num;
+                """.format(record_public_key, agent_id, LATEST_BLOCK_NUM)
 
         async with self._conn.cursor(cursor_factory=RealDictCursor) as cursor:
             try:
@@ -252,14 +273,18 @@ class Database(object):
                 await cursor.execute(fetch_record_contents)
                 record['contents'] = await cursor.fetchall()
 
+                await cursor.execute(fetch_record_ownership)
+                record['tonnes'] = record['tonnes'] / 100.0 * (await cursor.fetchone())['percentage_owner']
+
                 return record
             except TypeError:
                 return None
 
     async def fetch_all_record_resources(self):
         fetch_records = """
-        SELECT record_id FROM records
-        WHERE ({0}) >= start_block_num
+        SELECT id, record_id, material_type, material_origin, tonnes FROM records
+        WHERE public 
+        AND ({0}) >= start_block_num
         AND ({0}) < end_block_num;
         """.format(LATEST_BLOCK_NUM)
 
@@ -273,16 +298,18 @@ class Database(object):
                     SELECT latitude, longitude, timestamp
                     FROM record_locations
                     WHERE record_id='{0}'
+                    AND public
                     AND ({1}) >= start_block_num
                     AND ({1}) < end_block_num;
                     """.format(record['record_id'], LATEST_BLOCK_NUM)
 
                     fetch_record_owners = """
-                    SELECT agent_id, timestamp
+                    SELECT agents.id, agents.name, record_owners.percentage_owner 
                     FROM record_owners
-                    WHERE record_id='{0}'
-                    AND ({1}) >= start_block_num
-                    AND ({1}) < end_block_num;
+                    JOIN agents ON agents.public_key = record_owners.agent_id
+                    WHERE record_owners.record_id='{0}'
+                    AND ({1}) >= record_owners.start_block_num
+                    AND ({1}) < record_owners.end_block_num;
                     """.format(record['record_id'], LATEST_BLOCK_NUM)
 
                     await cursor.execute(fetch_record_locations)
@@ -290,6 +317,8 @@ class Database(object):
 
                     await cursor.execute(fetch_record_owners)
                     record['owners'] = await cursor.fetchall()
+
+                    del record['record_id']
 
                 return records
             except TypeError:
