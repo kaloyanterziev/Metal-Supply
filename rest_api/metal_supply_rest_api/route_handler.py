@@ -41,33 +41,38 @@ class RouteHandler(object):
 
     async def authenticate(self, request):
         body = await decode_request(request)
-        required_fields = ['public_key', 'password']
+        required_fields = ['email', 'password']
         validate_fields(required_fields, body)
 
         password = bytes(body.get('password'), 'utf-8')
 
-        auth_info = await self._database.fetch_auth_resource(
-            body.get('public_key'))
+        auth_info = await self._database.fetch_agent_on_email(
+            body.get('email'))
         if auth_info is None:
-            raise ApiUnauthorized('No agent with that public key exists')
+            raise ApiUnauthorized('No agent with that email exists')
 
         hashed_password = auth_info.get('hashed_password')
         if not bcrypt.checkpw(password, bytes.fromhex(hashed_password)):
-            raise ApiUnauthorized('Incorrect public key or password')
+            raise ApiUnauthorized('Incorrect email or password')
 
         token = generate_auth_token(
             request.app['secret_key'], body.get('public_key'))
 
-        return json_response({'authorization': token})
+        return json_response({
+            'authorization': token,
+            'name': auth_info.get('name'),
+            'email': auth_info.get('email'),
+            'role': auth_info.get('role_id')
+        })
 
     async def create_agent(self, request):
         body = await decode_request(request)
-        required_fields = ['name', 'password', 'role']
+        required_fields = ['name', 'email', 'password', 'role']
         validate_fields(required_fields, body)
 
         public_key, private_key = self._messenger.get_new_key_pair()
 
-        await self._database.create_agent_entry(public_key, body.get('name'))
+        await self._database.create_agent_entry(public_key, body.get('name'), body.get('email'))
 
         await self._messenger.send_create_agent_transaction(
             private_key=private_key,

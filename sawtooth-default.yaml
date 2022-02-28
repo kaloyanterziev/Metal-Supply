@@ -25,11 +25,15 @@ services:
     container_name: metal-supply-shell
     volumes:
       - .:/project/metal-supply
+      - /project/metal-supply/metal_supply_app/node_modules
     command: |
       bash -c "
         metal-supply-protogen
-        tail -f /dev/null
+        
       "
+#      cd metal_supply_app/
+#              npm run build
+#              cd ../
 #      tail -f /dev/null
 
   metal-supply-tp:
@@ -149,3 +153,20 @@ services:
     restart: always
     ports:
       - "8080:8080"
+
+#  metal-supply-app:
+#    build: ./metal_supply_app
+#    image: metal-supply-app
+#    container_name: metal-supply-app
+#    volumes:
+#      - ./metal_supply_app/:/usr/local/apache2/htdocs/
+#    expose:
+#      - 80
+#    ports:
+#      - "8040:80"
+#    depends_on:
+#      - simple-supply-rest-api
+#    command: |
+#      bash -c "
+#        npm run build
+#      "

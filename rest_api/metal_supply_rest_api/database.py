@@ -93,15 +93,16 @@ class Database(object):
 
         self._conn.commit()
 
-    async def create_agent_entry(self, public_key, name):
+    async def create_agent_entry(self, public_key, name, email):
         insert = """
                 INSERT INTO agents (
                     public_key,
-                    name
+                    name,
+                    email
                 )
-                VALUES ('{}', '{}');
+                VALUES ('{}', '{}', '{}');
                 """.format(
-            public_key, name)
+            public_key, name, email)
         async with self._conn.cursor() as cursor:
             await cursor.execute(insert)
 
@@ -138,6 +139,18 @@ class Database(object):
             FROM agents
             WHERE id = {0};
         """.format(agent_id)
+        async with self._conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            await cursor.execute(fetch)
+            return await cursor.fetchone()
+
+    async def fetch_agent_on_email(self, email):
+        fetch = """
+        SELECT *
+        FROM auth 
+        JOIN agents ON auth.public_key = agents.public_key
+        WHERE agents.email='{}'
+        """.format(email)
+
         async with self._conn.cursor(cursor_factory=RealDictCursor) as cursor:
             await cursor.execute(fetch)
             return await cursor.fetchone()

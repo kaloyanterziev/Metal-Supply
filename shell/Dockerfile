@@ -18,7 +18,7 @@ FROM ubuntu:bionic
 RUN \
  apt-get update \
  && apt-get install -y -q curl gnupg \
- && curl -sSL 'http://sks.srv.dumain.com/pks/lookup?op=get&search=0x8AA7AF1F1091A5FD' | apt-key add -  \
+ && curl -sSL 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x8AA7AF1F1091A5FD' | apt-key add -  \
  && echo 'deb [arch=amd64] http://repo.sawtooth.me/ubuntu/chime/stable bionic universe' >> /etc/apt/sources.list \
  && apt-get update
 
@@ -31,8 +31,11 @@ RUN apt-get install -y --allow-unauthenticated -q \
     python3-sawtooth-sdk \
     python3-sawtooth-rest-api
 
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
-    && apt-get install -y nodejs npm
+RUN curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh \
+    && bash nodesource_setup.sh \
+    && apt-get install -y nodejs \
+    && npm --version \
+    && node --version
 
 RUN pip3 install \
     aiohttp \
@@ -48,8 +51,8 @@ RUN pip3 install \
 
 WORKDIR /project/metal-supply
 
-#COPY curator_app/package.json /project/sawtooth-simple-supply/curator_app/
+#COPY metal_supply_app/package.json /project/metal-supply/metal_supply_app/
 #
-#RUN cd curator_app/ && npm install
+#RUN cd metal_supply_app/ && npm install
 
 ENV PATH $PATH:/project/metal-supply/bin
