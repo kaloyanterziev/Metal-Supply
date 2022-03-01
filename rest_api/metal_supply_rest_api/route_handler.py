@@ -56,8 +56,7 @@ class RouteHandler(object):
             raise ApiUnauthorized('Incorrect email or password')
 
         token = generate_auth_token(
-            request.app['secret_key'], body.get('public_key'))
-
+            request.app['secret_key'], auth_info.get('public_key'))
         return json_response({
             'authorization': token,
             'name': auth_info.get('name'),
@@ -217,7 +216,6 @@ class RouteHandler(object):
         except BadSignature:
             raise ApiUnauthorized('Invalid auth token')
         public_key = token_dict.get('public_key')
-
         auth_resource = await self._database.fetch_auth_resource(public_key)
         if auth_resource is None:
             raise ApiUnauthorized('Token is not associated with an agent')

@@ -20,7 +20,7 @@
           </div>
           <div class="form-group">
             <label for="role">Role</label>
-            <Field name="role" as="select">
+            <Field name="role" class="form-control" as="select">
               <option value=2>Waste Owner</option>
               <option value=0>Recycler</option>
               <option value=1>Converter</option>
