@@ -174,17 +174,17 @@ class Database(object):
             await cursor.execute(fetch)
             return await cursor.fetchone()
 
-    async def create_record_entry(self, record_public_key, material_type, material_origin, tonnes, contents, public):
+    async def create_record_entry(self, record_public_key, material_type, material_origin, tonnes, contents, published):
         insert_records = """
             INSERT INTO records (
                 record_id,
                 material_type,
                 material_origin,
                 tonnes,
-                public
+                published
             )
             VALUES ('{}', '{}', '{}', '{}', '{}');
-        """.format(record_public_key, material_type, material_origin, tonnes, public)
+        """.format(record_public_key, material_type, material_origin, tonnes, published)
 
         insert_record_contents = [
             """
@@ -296,7 +296,7 @@ class Database(object):
     async def fetch_all_record_resources(self):
         fetch_records = """
         SELECT id, record_id, material_type, material_origin, tonnes FROM records
-        WHERE public 
+        WHERE published 
         AND ({0}) >= start_block_num
         AND ({0}) < end_block_num;
         """.format(LATEST_BLOCK_NUM)
@@ -311,7 +311,7 @@ class Database(object):
                     SELECT latitude, longitude, timestamp
                     FROM record_locations
                     WHERE record_id='{0}'
-                    AND public
+                    AND published
                     AND ({1}) >= start_block_num
                     AND ({1}) < end_block_num;
                     """.format(record['record_id'], LATEST_BLOCK_NUM)
@@ -332,6 +332,44 @@ class Database(object):
                     record['owners'] = await cursor.fetchall()
 
                     del record['record_id']
+
+                return records
+            except TypeError:
+                return []
+
+
+
+    async def fetch_all_agent_records(self, agent_public_key):
+        fetch_records = """
+        SELECT records.id, records.record_id, records.material_type, records.material_origin, records.tonnes, records.published, record_owners.percentage_owner
+        FROM records
+        JOIN record_owners ON records.record_id = record_owners.record_id
+        WHERE record_owners.agent_id = '{0}' 
+        AND ({1}) >= records.start_block_num
+        AND ({1}) < records.end_block_num;
+        """.format(agent_public_key, LATEST_BLOCK_NUM)
+
+        async with self._conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            try:
+                await cursor.execute(fetch_records)
+                records = await cursor.fetchall()
+
+                for record in records:
+                    fetch_record_locations = """
+                    SELECT latitude, longitude, timestamp
+                    FROM record_locations
+                    WHERE record_id='{0}'
+                    AND ({1}) >= start_block_num
+                    AND ({1}) < end_block_num;
+                    """.format(record['record_id'], LATEST_BLOCK_NUM)
+
+                    await cursor.execute(fetch_record_locations)
+                    record['locations'] = await cursor.fetchall()
+
+                    record['tonnes'] = record['tonnes'] / 100.0 * record['percentage_owner']
+
+                    del record['record_id']
+                    del record['percentage_owner']
 
                 return records
             except TypeError:

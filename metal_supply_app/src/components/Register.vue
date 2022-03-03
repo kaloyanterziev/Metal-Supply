@@ -102,7 +102,9 @@ export default {
     },
   },
   mounted() {
+
     if (this.loggedIn) {
+      console.log(this.$store.state.auth.user);
       this.$router.push("/profile");
     }
   },
@@ -113,8 +115,8 @@ export default {
       this.loading = true;
 
       this.$store.dispatch("auth/register", user).then(
-        (data) => {
-          this.message = data.message;
+        () => {
+          this.message = "Successful Register";
           this.successful = true;
           this.loading = false;
         },

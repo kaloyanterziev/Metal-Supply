@@ -26,6 +26,14 @@ class AuthService {
       email: user.email,
       password: user.password,
       role: parseInt(user.role)
+    }).then(response => {
+      if (response.data.authorization) {
+        delete user.password;
+        user.authorization = response.data.authorization;
+        localStorage.setItem('user', JSON.stringify(user));
+      }
+
+      return response.data;
     });
   }
 }

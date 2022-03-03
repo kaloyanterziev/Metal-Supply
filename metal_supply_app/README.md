@@ -20,3 +20,6 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+Note: npm install -S @fawmi/vue-google-maps

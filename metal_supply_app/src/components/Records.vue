@@ -20,7 +20,7 @@
           <div class="card-text"
             v-for="owner in record.owners"
             v-bind:key="owner.id">
-            {{owner.percentage_owner}}% {{owner.name}}
+            <router-link :to="'/agents/' + owner.id">{{owner.percentage_owner}}% {{owner.name}}</router-link>
           </div>
         <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
       </div>

@@ -7,10 +7,12 @@
          v-for="agent in agents"
          v-bind:key="agent.id"
     >
-      <div class="card-body">
-        <h5 class="card-title">{{agent.name}}</h5>
-        <p class="card-text">{{agent.role}}</p>
-      </div>
+      <router-link :to=" '/agents/' + agent.id" style="text-decoration: none; color: inherit;">
+        <div class="card-body">
+          <h5 class="card-title">{{agent.name}}</h5>
+          <p class="card-text">{{agent.role}}</p>
+        </div>
+      </router-link>
     </div>
   </div>
 </template>

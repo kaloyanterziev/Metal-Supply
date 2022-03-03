@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS records (
     material_type      varchar,
     material_origin    varchar,
     tonnes             double precision,
-    public             boolean,
+    published          boolean,
     start_block_num    bigint,
     end_block_num      bigint
 );
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS record_locations (
     agent_id         varchar,
     latitude         double precision,
     longitude        double precision,
-    public           boolean,
+    published        boolean,
     timestamp        bigint,
     start_block_num  bigint,
     end_block_num    bigint
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS record_owners (
     record_id            varchar,
     agent_id             varchar,
     percentage_owner     double precision,
-    public               boolean,
+    published            boolean,
     timestamp            bigint,
     start_block_num      bigint,
     end_block_num        bigint

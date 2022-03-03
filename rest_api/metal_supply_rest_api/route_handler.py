@@ -102,6 +102,14 @@ class RouteHandler(object):
                 'Agent with public key {} was not found'.format(agent_id))
         return json_response(agent)
 
+    async def fetch_agent_records(self, request):
+        _, agent_public_key = await self._authorize(request)
+        records = await self._database.fetch_all_agent_records(agent_public_key)
+        # if records is None:
+        #     raise ApiNotFound(
+        #         'Agent with public key {} was not found'.format(agent_public_key))
+        return json_response(records)
+
     async def create_record(self, request):
         private_key, _ = await self._authorize(request)
         record_public_key, _ = self._messenger.get_new_key_pair()

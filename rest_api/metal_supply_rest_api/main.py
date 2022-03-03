@@ -96,6 +96,7 @@ def start_rest_api(host, port, messenger, database):
 
     app.router.add_post('/agents', handler.create_agent)
     app.router.add_get('/agents', handler.list_agents)
+    app.router.add_get('/agents/records', handler.fetch_agent_records)
     app.router.add_get('/agents/{agent_id}', handler.fetch_agent)
 
     app.router.add_post('/records', handler.create_record)
