@@ -20,8 +20,9 @@
           <div class="card-text"
             v-for="owner in record.owners"
             v-bind:key="owner.id">
-            <router-link :to="'/agents/' + owner.id">{{owner.percentage_owner}}% {{owner.name}}</router-link>
+            <router-link :to="'/agents/' + owner.id">{{owner.name}}</router-link>
           </div>
+        <p class="card-text">{{record.address}}</p>
         <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
       </div>
     </div>
@@ -32,6 +33,7 @@
 <script>
 import RecordService from "../services/record.service";
 import AddRecordModal from "@/components/AddRecordModal";
+import GoogleApisService from "@/services/googleapis.service";
 
 
 export default {
@@ -41,7 +43,7 @@ export default {
   },
   data() {
     return {
-      records: {},
+      records: [],
     };
   },
   mounted() {
@@ -52,6 +54,12 @@ export default {
       RecordService.getAllRecords().then(
           (response) => {
             this.records = response.data;
+            this.records.forEach((record, index) => {
+              if(record.locations) {
+                let location = record.locations.reduce((prev, current) => (prev.timestamp > current.timestamp) ? prev : current)
+                this.getAddress(location, index)
+              }
+            })
           },
           (error) => {
             this.content =
@@ -62,6 +70,12 @@ export default {
                 error.toString();
           }
       );
+    },
+    getAddress(location, index) {
+      GoogleApisService.reverseGeocoding(location.latitude, location.longitude)
+          .then((response) => {
+            this.records[index]['address'] = response.data.results[0].formatted_address;
+          })
     }
   }
 }

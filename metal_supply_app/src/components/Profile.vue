@@ -33,11 +33,12 @@
           <p class="card-text">{{record.material_type}}</p>
           <p class="card-text">{{record.tonnes}} tonnes</p>
           <p class="card-text">{{record.published ? "Published" : ""}}</p>
-          <div class="card-text"
-               v-for="location in record.locations"
-               v-bind:key="location.timestamp">
-            Lat: {{location.latitude}},  Long:{{location.longitude}}
-          </div>
+<!--          <div class="card-text"-->
+<!--               v-for="location in record.locations"-->
+<!--               v-bind:key="location.timestamp">-->
+<!--            Lat: {{location.latitude}},  Long:{{location.longitude}}-->
+<!--          </div>-->
+          <p class="card-text">{{record.address}}</p>
           <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
         </div>
       </router-link>
@@ -48,6 +49,7 @@
 <script>
 import UserService from "@/services/user.service";
 import AddRecordModal from "@/components/AddRecordModal";
+import GoogleApisService from "@/services/googleapis.service";
 
 export default {
   name: 'Profile',
@@ -76,10 +78,22 @@ export default {
       UserService.getAgentRecords().then(
           (response) => {
             this.records = response.data;
+            this.records.forEach((record, index) => {
+              if(record.locations) {
+                let location = record.locations.reduce((prev, current) => (prev.timestamp > current.timestamp) ? prev : current)
+                this.getAddress(location, index)
+              }
+            })
           }, (error) => {
             this.message = error;
           }
       )
+    },
+    getAddress(location, index) {
+      GoogleApisService.reverseGeocoding(location.latitude, location.longitude)
+        .then((response) => {
+          this.records[index]['address'] = response.data.results[0].formatted_address;
+        })
     }
   }
 };

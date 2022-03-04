@@ -8,7 +8,7 @@ class RecordService {
     }
 
     getRecord(id) {
-        return axios.get('/records' + id, { headers: authHeader() });
+        return axios.get('/records/' + id, { headers: authHeader() });
     }
 
     createRecord(record) {
