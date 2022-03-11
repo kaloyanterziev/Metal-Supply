@@ -22,6 +22,13 @@ class RecordService {
             public: record.public
         }, { headers: authHeader() });
     }
+
+    updateRecordLocation(record_id, latitude, longitude) {
+        return axios.post('/records/' + record_id + '/location', {
+            latitude: latitude,
+            longitude: longitude
+        }, {headers: authHeader()})
+    }
 }
 
 export default new RecordService();
