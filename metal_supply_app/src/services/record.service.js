@@ -29,6 +29,13 @@ class RecordService {
             longitude: longitude
         }, {headers: authHeader()})
     }
+
+    transferRecord(record_id, receiving_agent_id, percentage) {
+        return axios.post('/records/' + record_id + '/transfer', {
+            receiving_agent: receiving_agent_id,
+            percentage: parseFloat(percentage)
+        }, {headers: authHeader()})
+    }
 }
 
 export default new RecordService();

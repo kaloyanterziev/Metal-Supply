@@ -92,7 +92,7 @@ class Database(object):
             async with conn.cursor(cursor_factory=RealDictCursor) as cursor:
                 await cursor.execute(insert)
 
-        self._pool.commit()
+            conn.commit()
 
     async def create_agent_entry(self, public_key, name, email):
         insert = """
@@ -108,11 +108,11 @@ class Database(object):
             async with conn.cursor(cursor_factory=RealDictCursor) as cursor:
                 await cursor.execute(insert)
 
-        self._pool.commit()
+            conn.commit()
 
     async def fetch_agent_resource(self, agent_id):
         fetch = """
-        SELECT agents.id, agents.name, agent_roles.name as role, agents.timestamp FROM agents
+        SELECT agents.id, agents.name, agents.email, agent_roles.name as role, agents.timestamp FROM agents
         JOIN agent_roles ON agents.role_id = agent_roles.id
         WHERE agents.id='{0}'
         AND ({1}) >= agents.start_block_num
@@ -126,7 +126,7 @@ class Database(object):
 
     async def fetch_all_agent_resources(self):
         fetch = """
-        SELECT agents.id, agents.name, agent_roles.name as role, agents.timestamp FROM agents
+        SELECT agents.id, agents.name, agents.email, agent_roles.name as role, agents.timestamp FROM agents
         JOIN agent_roles ON agents.role_id = agent_roles.id
         WHERE ({0}) >= agents.start_block_num
         AND ({0}) < agents.end_block_num;
@@ -215,7 +215,7 @@ class Database(object):
                 for insert in insert_record_contents:
                     await cursor.execute(insert)
 
-        self._pool.commit()
+            conn.commit()
 
     #TODO: delete
     async def fetch_record_resource(self, record_id):
@@ -258,7 +258,7 @@ class Database(object):
 
     async def fetch_record_resource(self, record_public_key, agent_id):
         fetch_record = """
-        SELECT id, material_type, material_origin, tonnes FROM records
+        SELECT id, material_type, material_origin, tonnes, published FROM records
         WHERE record_id='{0}'
         AND ({1}) >= start_block_num
         AND ({1}) < end_block_num;

@@ -1,10 +1,10 @@
 <template>
   <header class="jumbotron">
     <h3>Record  {{record.id}}</h3>
-    <p class="card-title"> {{record.material_origin}}</p>
-    <p class="card-text">{{record.material_type}}</p>
+    <p class="card-title">Material Origin:  {{record.material_origin}}</p>
+    <p class="card-text">Material Type: {{record.material_type}}</p>
     <p class="card-text">{{record.tonnes}} tonnes</p>
-    <p class="card-text" v-if="record.published">{{record.published}}</p>
+    <p class="card-text" v-if="record.published != null">{{record.published ? "Published" : "Private"}}</p>
   </header>
   <h3>Locations: </h3>
   <div class="d-flex justify-content-end  mb-4">
@@ -16,7 +16,7 @@
     </button>
   </div>
   <AddLocationModal @onLocationAdded="getRecord"/>
-  <TransferRecordModal @onModalTransfered="this.$router.back()"/>
+  <TransferRecordModal @onRecordTransferred="this.$router.push('/profile')"/>
   <div v-if="record.locations">
   <GMapMap
       :center="center"

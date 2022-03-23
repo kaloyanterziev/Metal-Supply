@@ -32,7 +32,7 @@
           <h5 class="card-title">{{record.material_origin}}</h5>
           <p class="card-text">{{record.material_type}}</p>
           <p class="card-text">{{record.tonnes}} tonnes</p>
-          <p class="card-text">{{record.published ? "Published" : ""}}</p>
+          <p class="card-text">{{record.published ? "Published" : "Private"}}</p>
 <!--          <div class="card-text"-->
 <!--               v-for="location in record.locations"-->
 <!--               v-bind:key="location.timestamp">-->

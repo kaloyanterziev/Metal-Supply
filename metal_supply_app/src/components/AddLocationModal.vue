@@ -4,7 +4,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLongTitle">Add Location to Record {{record_id}}</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" ref="close" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -75,11 +75,13 @@ export default {
             const self = this;
             setTimeout(function () {
               self.message = "";
-            }, 3000);
+              self.successful = true;
+              self.$refs.close.click();
+            }, 1000);
             this.loading = false;
             this.successful = true;
             this.$emit('onLocationAdded');
-            this.$refs['add-location-modal'].hide();
+
             this.longitude = 0;
             this.latitude = 0;
           }, error => {

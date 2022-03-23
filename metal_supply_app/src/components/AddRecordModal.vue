@@ -4,7 +4,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLongTitle">Add Record</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" ref="close" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -115,12 +115,21 @@ export default {
             this.message = data.data.data;
             this.loading = false;
             this.successful = true;
+            const self = this;
+            setTimeout(function () {
+              self.message = "";
+              self.successful = false;
+              self.record = {
+                contents: [{"percentage": 0, "metal": ""}]
+              }
+              self.$refs.close.click();
+            }, 3000);
             this.$emit('onRecordCreate');
             this.$refs['add-record-modal'].hide();
           }, error => {
             console.log(error)
             this.successful = false;
-            this.message = error;
+            this.message = error.data.error;
             this.loading = false;
           }
       );
