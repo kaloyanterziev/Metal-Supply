@@ -8,6 +8,7 @@ message MetalSupplyPayload{
         UPDATE_RECORD = 2;
         UPDATE_RECORD_LOCATION = 3;
         TRANSFER_RECORD = 4;
+        LINK_RECORD = 5;
     }
 
     // Whether the payload contains a create agent, create record,
@@ -21,9 +22,10 @@ message MetalSupplyPayload{
     UpdateRecordLocationAction update_record_location = 4;
     UpdateRecordAction update_record = 5;
     TransferRecordAction transfer_record = 6;
+    LinkRecordAction link_record = 7;
 
     // Approximately when transaction was submitted, as a Unix UTC timestamp
-    uint64 timestamp = 7;
+    uint64 timestamp = 8;
 }
 
 
@@ -71,4 +73,12 @@ message TransferRecordAction {
     string receiving_agent = 2;
 
     double percentage = 3;
+}
+
+message LinkRecordAction {
+    // The id of the record for the ownership transfer
+    string record_id = 1;
+
+    // The public key of the agent to which the record will be transferred
+    string prev_record_id = 2;
 }

@@ -168,6 +168,26 @@ class RouteHandler(object):
         return json_response(
             {'data': 'Transfer record transaction submitted'})
 
+    async def link_record(self, request):
+        private_key, _ = await self._authorize(request)
+
+        record_id = request.match_info.get('record_id', '')
+        prev_record_id = request.match_info.get('prev_record_id', '')
+        record_public_key = (await self._database.fetch_record_public_key(record_id))['record_id']
+        prev_record_public_key = (await self._database.fetch_record_public_key(prev_record_id))['record_id']
+        LOGGER.debug(record_id)
+        LOGGER.debug(prev_record_id)
+        LOGGER.debug(record_public_key)
+        LOGGER.debug(prev_record_public_key)
+        await self._messenger.send_link_record_transaction(
+            private_key=private_key,
+            record_id = record_public_key,
+            prev_record_id = prev_record_public_key,
+            timestamp=get_time())
+
+        return json_response(
+            {'data': 'Linking record transaction submitted'})
+
     async def update_record_location(self, request):
         private_key, public_key = await self._authorize(request)
 

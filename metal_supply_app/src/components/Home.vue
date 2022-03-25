@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <header class="jumbotron">
-      <h3>Home</h3>
+      <h3>Metal News and Prices</h3>
     </header>
     <section class="metal-block-container">
       <div class="metal-block-container__inner">

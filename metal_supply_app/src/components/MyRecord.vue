@@ -8,14 +8,18 @@
   </header>
   <h3>Locations: </h3>
   <div class="d-flex justify-content-end  mb-4">
-    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#transfer-record-modal">
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#link-record-modal">
+      <font-awesome-icon icon="link" /> Link Record
+    </button>
+    <button type="button" class="btn btn-warning ml-3" data-toggle="modal" data-target="#transfer-record-modal">
       <font-awesome-icon icon="arrow-right" /> Transfer Record
     </button>
-    <button type="button" class="btn btn-primary ml-4" data-toggle="modal" data-target="#add-location-modal">
+    <button type="button" class="btn btn-primary ml-3" data-toggle="modal" data-target="#add-location-modal">
       <font-awesome-icon icon="plus" /> Add Location
     </button>
   </div>
   <AddLocationModal @onLocationAdded="getRecord"/>
+  <LinkRecordModal @onRecordLinked="getRecord" />
   <TransferRecordModal @onRecordTransferred="this.$router.push('/profile')"/>
   <div v-if="record.locations">
   <GMapMap
@@ -38,9 +42,12 @@
 import RecordService from "@/services/record.service";
 import AddLocationModal from "@/components/AddLocationModal";
 import TransferRecordModal from "@/components/TransferRecordModal";
+import LinkRecordModal from "@/components/LinkRecordModal";
+
 export default {
   name: "MyRecord",
   components: {
+    LinkRecordModal,
     AddLocationModal,
     TransferRecordModal
   },

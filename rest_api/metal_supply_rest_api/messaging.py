@@ -31,6 +31,8 @@ from metal_supply_rest_api.transaction_creation import \
     make_transfer_record_transaction
 from metal_supply_rest_api.transaction_creation import \
     make_update_record_location_transaction
+from metal_supply_rest_api.transaction_creation import \
+    make_link_record_transaction
 
 
 class Messenger(object):
@@ -99,6 +101,22 @@ class Messenger(object):
             receiving_agent=receiving_agent,
             percentage=percentage,
             record_id=record_id,
+            timestamp=timestamp)
+        await self._send_and_wait_for_commit(batch)
+
+    async def send_link_record_transaction(self,
+                                           private_key,
+                                           record_id,
+                                           prev_record_id,
+                                           timestamp):
+        transaction_signer = self._crypto_factory.new_signer(
+            secp256k1.Secp256k1PrivateKey.from_hex(private_key))
+
+        batch = make_link_record_transaction(
+            transaction_signer=transaction_signer,
+            batch_signer=self._batch_signer,
+            record_id=record_id,
+            prev_record_id=prev_record_id,
             timestamp=timestamp)
         await self._send_and_wait_for_commit(batch)
 

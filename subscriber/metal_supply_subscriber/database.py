@@ -45,7 +45,7 @@ CREATE_RECORD_STMTS = """
 CREATE TABLE IF NOT EXISTS records (
     id                 bigserial PRIMARY KEY,
     record_id          varchar,
-    previous_record_id varchar,
+    prev_record_id varchar,
     material_type      varchar,
     material_origin    varchar,
     tonnes             double precision,
@@ -309,10 +309,12 @@ class Database(object):
     def insert_record(self, record_dict):
         update_record = """
         UPDATE records 
-        SET start_block_num = {},
+        SET prev_record_id = '{}',
+        start_block_num = {},
         end_block_num = {}
         WHERE record_id = '{}';
         """.format(
+            record_dict['prev_record_id'],
             record_dict['start_block_num'],
             record_dict['end_block_num'],
             record_dict['record_id'])

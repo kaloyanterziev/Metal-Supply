@@ -61,6 +61,11 @@ class MetalSupplyHandler(TransactionHandler):
                 state=state,
                 public_key=header.signer_public_key,
                 payload=payload)
+        elif payload.action == payload_pb2.MetalSupplyPayload.LINK_RECORD:
+            _link_record(
+                state=state,
+                public_key=header.signer_public_key,
+                payload=payload)
         else:
             raise InvalidTransaction('Unhandled action')
 
@@ -140,6 +145,30 @@ def _update_record_location(state, public_key, payload):
         record_id=payload.data.record_id,
         agent_id=public_key,
         timestamp=payload.timestamp)
+
+
+def _link_record(state, public_key, payload):
+    record = state.get_record(payload.data.record_id)
+    prev_record = state.get_record(payload.data.prev_record_id)
+
+    if record is None:
+        raise InvalidTransaction('Record with the record id {} does not '
+                                 'exist'.format(payload.data.record_id))
+    if prev_record is None:
+        raise InvalidTransaction('Record with the record id {} does not '
+                                 'exist'.format(payload.data.prev_record))
+
+    if not _validate_record_owner(signer_public_key=public_key,
+                                  record=record):
+        raise InvalidTransaction(
+            'Transaction signer is not the owner of the record')
+    if not _validate_record_owner(signer_public_key=public_key,
+                                  record=prev_record):
+        raise InvalidTransaction(
+            'Transaction signer is not the owner of the record')
+    state.link_record(
+        record_id=payload.data.record_id,
+        prev_record_id=payload.data.prev_record_id)
 
 
 def _validate_record_owner(signer_public_key, record):

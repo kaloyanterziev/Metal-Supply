@@ -256,9 +256,10 @@ class Database(object):
                 except TypeError:
                     return None
 
-    async def fetch_record_resource(self, record_public_key, agent_id):
+    async def fetch_record_resource(self, record_public_key, agent_id, record_keys = set()):
+        record_keys.add(record_public_key)
         fetch_record = """
-        SELECT id, material_type, material_origin, tonnes, published FROM records
+        SELECT id, material_type, material_origin, tonnes, published, prev_record_id FROM records
         WHERE record_id='{0}'
         AND ({1}) >= start_block_num
         AND ({1}) < end_block_num;
@@ -299,6 +300,10 @@ class Database(object):
 
                     await cursor.execute(fetch_record_ownership)
                     record['tonnes'] = record['tonnes'] / 100.0 * (await cursor.fetchone())['percentage_owner']
+
+                    if record['prev_record_id'] is not None and record['prev_record_id'] != "" and not record['prev_record_id'] in record_keys:
+                        record['prev_record'] = await self.fetch_record_resource(record['prev_record_id'], agent_id, record_keys)
+                        del record['prev_record_id']
 
                     return record
                 except TypeError:

@@ -30,6 +30,11 @@ class MetalSupplyPayload(object):
                 payload_pb2.MetalSupplyPayload.TRANSFER_RECORD:
             return self._transaction.transfer_record
 
+        if self._transaction.HasField('link_record') and \
+            self._transaction.action == \
+                payload_pb2.MetalSupplyPayload.LINK_RECORD:
+            return self._transaction.link_record
+
         if self._transaction.HasField('update_record_location') and \
             self._transaction.action == \
                 payload_pb2.MetalSupplyPayload.UPDATE_RECORD_LOCATION:

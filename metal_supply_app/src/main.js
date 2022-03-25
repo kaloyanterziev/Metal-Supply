@@ -14,6 +14,7 @@ createApp(App)
     .use(VueGoogleMaps, {
         load: {
             key: 'AIzaSyCeog1wzuKJwMOgd3_gX-nwmuCf1liBW-M',
+            libraries: "visualization"
         },
     })
     .component("font-awesome-icon", FontAwesomeIcon)

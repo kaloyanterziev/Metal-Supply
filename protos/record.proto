@@ -35,12 +35,12 @@ message Record {
     // record identifier
     string record_id = 1;
 
-    string previous_record_id = 2;
+    string prev_record_id = 2;
 
     // Ordered oldest to newest by timestamp
     repeated Owner owners = 3;
 
-    repeated Location locations = 7;
+    repeated Location locations = 4;
 }
 
 

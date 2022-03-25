@@ -36,6 +36,10 @@ class RecordService {
             percentage: parseFloat(percentage)
         }, {headers: authHeader()})
     }
+
+    linkRecord(record_id, prev_record_id) {
+        return axios.post('/records/' + record_id + '/link/' + prev_record_id, {}, {headers: authHeader()})
+    }
 }
 
 export default new RecordService();
