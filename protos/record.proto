@@ -35,7 +35,7 @@ message Record {
     // record identifier
     string record_id = 1;
 
-    string prev_record_id = 2;
+    repeated string next_record_ids = 2;
 
     // Ordered oldest to newest by timestamp
     repeated Owner owners = 3;

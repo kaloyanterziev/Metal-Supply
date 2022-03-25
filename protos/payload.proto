@@ -80,5 +80,5 @@ message LinkRecordAction {
     string record_id = 1;
 
     // The public key of the agent to which the record will be transferred
-    string prev_record_id = 2;
+    string next_record_id = 2;
 }

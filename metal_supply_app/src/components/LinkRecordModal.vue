@@ -13,7 +13,7 @@
             <!--            <div v-if="!successful">-->
 
             <div class="form-group">
-              <select v-model="prev_record_id" name="prev_record_id" class="form-control">
+              <select v-model="next_record_id" name="next_record_id" class="form-control">
                 <option v-for="record in records" v-bind:key="record.id"
                         :value="record.id">{{record.material_type}} {{record.material_origin}} {{record.tonnes}}
                 </option>
@@ -56,7 +56,7 @@ export default {
       loading: false,
       message: "",
       records: [],
-      prev_record_id: null
+      next_record_id: null
     };
   },
   mounted() {
@@ -75,7 +75,7 @@ export default {
       this.successful = false;
       this.loading = true;
 
-      RecordService.linkRecord(this.record_id, this.prev_record_id).then(
+      RecordService.linkRecord(this.record_id, this.next_record_id).then(
           data => {
             this.message = data.data.data;
             this.successful = true;
@@ -87,7 +87,7 @@ export default {
             }, 1000);
             this.loading = false;
             this.$emit('onRecordLinked');
-            this.prev_record_id = null;
+            this.next_record_id = null;
           }, error => {
             console.log(error)
             this.successful = false;

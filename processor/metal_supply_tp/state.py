@@ -173,7 +173,7 @@ class MetalSupplyState(object):
         self._context.set_state(updated_state, timeout=self._timeout)
 
 
-    def link_record(self, record_id, prev_record_id):
+    def link_record(self, record_id, next_record_id):
         address = addresser.get_record_address(record_id)
         container = record_pb2.RecordContainer()
 
@@ -184,8 +184,7 @@ class MetalSupplyState(object):
             container.ParseFromString(state_entries[0].data)
             for record in container.entries:
                 if record.record_id == record_id:
-                    print("record updated")
-                    record.prev_record_id = prev_record_id
+                    record.next_record_ids.extend(next_record_id)
 
         data = container.SerializeToString()
         updated_state = {}

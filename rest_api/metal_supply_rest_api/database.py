@@ -259,7 +259,7 @@ class Database(object):
     async def fetch_record_resource(self, record_public_key, agent_id, record_keys = set()):
         record_keys.add(record_public_key)
         fetch_record = """
-        SELECT id, material_type, material_origin, tonnes, published, prev_record_id FROM records
+        SELECT id, material_type, material_origin, tonnes, published, next_record_id FROM records
         WHERE record_id='{0}'
         AND ({1}) >= start_block_num
         AND ({1}) < end_block_num;
@@ -277,6 +277,11 @@ class Database(object):
                 SELECT metal, percentage FROM record_contents
                 WHERE record_id='{0}';
                 """.format(record_public_key, LATEST_BLOCK_NUM)
+
+        fetch_record_links = """
+                        SELECT next_record_id FROM record_links
+                        WHERE record_id='{0}';
+                        """.format(record_public_key, LATEST_BLOCK_NUM)
 
         fetch_record_ownership = """
                 SELECT percentage_owner FROM record_owners
@@ -301,9 +306,10 @@ class Database(object):
                     await cursor.execute(fetch_record_ownership)
                     record['tonnes'] = record['tonnes'] / 100.0 * (await cursor.fetchone())['percentage_owner']
 
-                    if record['prev_record_id'] is not None and record['prev_record_id'] != "" and not record['prev_record_id'] in record_keys:
-                        record['prev_record'] = await self.fetch_record_resource(record['prev_record_id'], agent_id, record_keys)
-                        del record['prev_record_id']
+                    next_record_ids = await cursor.execute(fetch_record_links)
+                    record['next_records'] = []
+                    for next_record_id in next_record_ids:
+                        record['next_records'].add(await self.fetch_record_resource(next_record_id, agent_id, record_keys))
 
                     return record
                 except TypeError:

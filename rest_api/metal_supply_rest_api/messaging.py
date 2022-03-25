@@ -107,7 +107,7 @@ class Messenger(object):
     async def send_link_record_transaction(self,
                                            private_key,
                                            record_id,
-                                           prev_record_id,
+                                           next_record_id,
                                            timestamp):
         transaction_signer = self._crypto_factory.new_signer(
             secp256k1.Secp256k1PrivateKey.from_hex(private_key))
@@ -116,7 +116,7 @@ class Messenger(object):
             transaction_signer=transaction_signer,
             batch_signer=self._batch_signer,
             record_id=record_id,
-            prev_record_id=prev_record_id,
+            next_record_id=next_record_id,
             timestamp=timestamp)
         await self._send_and_wait_for_commit(batch)
 

@@ -162,7 +162,7 @@ def make_transfer_record_transaction(transaction_signer,
 def make_link_record_transaction(transaction_signer,
                                      batch_signer,
                                      record_id,
-                                     prev_record_id,
+                                     next_record_id,
                                      timestamp):
     """Make a LinkRecordAction transaction and wrap it in a batch
 
@@ -179,15 +179,15 @@ def make_link_record_transaction(transaction_signer,
     agent_address = addresser.get_agent_address(
         transaction_signer.get_public_key().as_hex())
     record_address = addresser.get_record_address(record_id)
-    prev_record_address = addresser.get_record_address(prev_record_id)
+    next_record_address = addresser.get_record_address(next_record_id)
 
-    inputs = [agent_address, prev_record_address, record_address]
+    inputs = [agent_address, next_record_address, record_address]
 
     outputs = [record_address]
 
     action = payload_pb2.LinkRecordAction(
         record_id=record_id,
-        prev_record_id=prev_record_id)
+        next_record_id=next_record_id)
 
     payload = payload_pb2.MetalSupplyPayload(
         action=payload_pb2.MetalSupplyPayload.LINK_RECORD,

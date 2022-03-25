@@ -45,7 +45,6 @@ CREATE_RECORD_STMTS = """
 CREATE TABLE IF NOT EXISTS records (
     id                 bigserial PRIMARY KEY,
     record_id          varchar,
-    prev_record_id varchar,
     material_type      varchar,
     material_origin    varchar,
     tonnes             double precision,
@@ -66,6 +65,15 @@ CREATE TABLE IF NOT EXISTS record_contents (
 );
 """
 
+CREATE_RECORD_LINKS_STMTS = """
+CREATE TABLE IF NOT EXISTS record_links (
+    id               bigserial PRIMARY KEY,
+    record_id        varchar,
+    next_record_id   varchar,
+    start_block_num  bigint,
+    end_block_num    bigint
+);
+"""
 
 CREATE_RECORD_LOCATION_STMTS = """
 CREATE TABLE IF NOT EXISTS record_locations (
@@ -182,6 +190,9 @@ class Database(object):
             LOGGER.debug('Creating table: record_contents')
             cursor.execute(CREATE_RECORD_CONTENT_STMTS)
 
+            LOGGER.debug('Creating table: record_links')
+            cursor.execute(CREATE_RECORD_LINKS_STMTS)
+
             LOGGER.debug('Creating table: agents')
             cursor.execute(CREATE_AGENT_STMTS)
 
@@ -229,6 +240,10 @@ class Database(object):
         DELETE FROM record_contents WHERE record_id =
         (SELECT record_id FROM records WHERE start_block_num >= {})
         """.format(block_num)
+        delete_record_links = """
+                DELETE FROM record_links WHERE record_id =
+                (SELECT record_id FROM records WHERE start_block_num >= {})
+                """.format(block_num)
         delete_records = """
         DELETE FROM records WHERE start_block_num >= {}
         """.format(block_num)
@@ -247,6 +262,7 @@ class Database(object):
             cursor.execute(delete_record_locations)
             cursor.execute(delete_record_owners)
             cursor.execute(delete_record_contents)
+            cursor.execute(delete_record_links)
             cursor.execute(delete_records)
             cursor.execute(update_records)
             cursor.execute(delete_blocks)
@@ -309,12 +325,10 @@ class Database(object):
     def insert_record(self, record_dict):
         update_record = """
         UPDATE records 
-        SET prev_record_id = '{}',
-        start_block_num = {},
+        SET start_block_num = {},
         end_block_num = {}
         WHERE record_id = '{}';
         """.format(
-            record_dict['prev_record_id'],
             record_dict['start_block_num'],
             record_dict['end_block_num'],
             record_dict['record_id'])
@@ -324,6 +338,7 @@ class Database(object):
 
         self._insert_record_locations(record_dict)
         self._insert_record_owners(record_dict)
+        self._insert_record_links(record_dict)
 
     def _insert_record_locations(self, record_dict):
         update_record_locations = """
@@ -388,4 +403,30 @@ class Database(object):
         with self._conn.cursor() as cursor:
             cursor.execute(update_record_owners)
             for insert in insert_record_owners:
+                cursor.execute(insert)
+
+    def _insert_record_links(self, record_dict):
+        update_record_links = """
+                DELETE FROM record_links
+                WHERE record_id = '{}';
+                """.format(record_dict['record_id'])
+
+        insert_record_links = [
+            """
+            INSERT INTO record_links (
+            record_id,
+            next_record_id,
+            start_block_num,
+            end_block_num)
+            VALUES ('{}', '{}', '{}', '{}');
+            """.format(
+                record_dict['record_id'],
+                next_record_id,
+                record_dict['start_block_num'],
+                record_dict['end_block_num'])
+            for next_record_id in record_dict['next_record_ids']
+        ]
+        with self._conn.cursor() as cursor:
+            cursor.execute(update_record_links)
+            for insert in insert_record_links:
                 cursor.execute(insert)

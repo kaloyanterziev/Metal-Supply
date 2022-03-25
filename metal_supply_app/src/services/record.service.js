@@ -37,8 +37,8 @@ class RecordService {
         }, {headers: authHeader()})
     }
 
-    linkRecord(record_id, prev_record_id) {
-        return axios.post('/records/' + record_id + '/link/' + prev_record_id, {}, {headers: authHeader()})
+    linkRecord(record_id, next_record_id) {
+        return axios.post('/records/' + record_id + '/link/' + next_record_id, {}, {headers: authHeader()})
     }
 }
 

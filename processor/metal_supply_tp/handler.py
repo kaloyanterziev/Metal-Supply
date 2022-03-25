@@ -149,32 +149,32 @@ def _update_record_location(state, public_key, payload):
 
 def _link_record(state, public_key, payload):
     record = state.get_record(payload.data.record_id)
-    prev_record = state.get_record(payload.data.prev_record_id)
+    next_record = state.get_record(payload.data.next_record_id)
 
     if record is None:
         raise InvalidTransaction('Record with the record id {} does not '
                                  'exist'.format(payload.data.record_id))
-    if prev_record is None:
+    if next_record is None:
         raise InvalidTransaction('Record with the record id {} does not '
-                                 'exist'.format(payload.data.prev_record))
+                                 'exist'.format(payload.data.next_record))
 
     if not _validate_record_owner(signer_public_key=public_key,
                                   record=record):
         raise InvalidTransaction(
             'Transaction signer is not the owner of the record')
     if not _validate_record_owner(signer_public_key=public_key,
-                                  record=prev_record):
+                                  record=next_record):
         raise InvalidTransaction(
             'Transaction signer is not the owner of the record')
     state.link_record(
         record_id=payload.data.record_id,
-        prev_record_id=payload.data.prev_record_id)
+        next_record_id=payload.data.next_record_id)
 
 
 def _validate_record_owner(signer_public_key, record):
     """Validates that the public key of the signer is contained in the set of owners
     """
-    return any(owner.agent_id == signer_public_key for owner in record.owners)
+    return any(owner.agent_id == signer_public_key and owner.percentage_owner > 0 for owner in record.owners)
 
 
 def _validate_latlng(latitude, longitude):
