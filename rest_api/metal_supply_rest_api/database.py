@@ -282,8 +282,8 @@ class Database(object):
                 """.format(record_public_key, LATEST_BLOCK_NUM)
 
         fetch_record_links = """
-                        SELECT next_record_id FROM record_links
-                        WHERE record_id='{0}';
+                        SELECT record_id FROM record_links
+                        WHERE next_record_id='{0}';
                         """.format(record_public_key, LATEST_BLOCK_NUM)
 
         fetch_record_ownership = """
@@ -310,14 +310,14 @@ class Database(object):
                     record['tonnes'] = record['tonnes'] / 100.0 * (await cursor.fetchone())['percentage_owner']
 
                     await cursor.execute(fetch_record_links)
-                    next_record_ids = await cursor.fetchall()
-                    next_records = []
-                    for next_record_id_row in next_record_ids:
-                        next_record_id = next_record_id_row['next_record_id']
-                        if next_record_id not in record_keys:
-                            next_record = await self.fetch_record_resource(next_record_id, agent_id, record_keys)
-                            next_records.append(next_record)
-                    record['next_records'] = next_records
+                    prev_record_ids = await cursor.fetchall()
+                    prev_records = []
+                    for prev_record_id_row in prev_record_ids:
+                        prev_record_id = prev_record_id_row['record_id']
+                        if prev_record_id not in record_keys:
+                            prev_record = await self.fetch_record_resource(prev_record_id, agent_id, record_keys)
+                            prev_records.append(prev_record)
+                    record['prev_records'] = prev_records
                     return record
                 except TypeError as err:
                     LOGGER.error(err)

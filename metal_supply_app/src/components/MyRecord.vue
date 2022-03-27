@@ -6,6 +6,8 @@
     <p class="card-text">{{record.tonnes}} tonnes</p>
     <p class="card-text" v-if="record.published != null">{{record.published ? "Published" : "Private"}}</p>
   </header>
+  <h3>Contents: </h3>
+
   <h3>Locations: </h3>
   <div class="d-flex justify-content-end  mb-4">
     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#link-record-modal">
@@ -24,7 +26,7 @@
   <div v-if="record.locations">
     <GMapMap
         :center="center"
-        :zoom="7"
+        :zoom="3"
         map-type-id="terrain"
         class="mb-5"
     >
@@ -38,8 +40,8 @@
   </div>
   <h3>History: </h3>
   <GMapMap
-      :center="center2"
-      :zoom="7"
+      :center="history_center"
+      :zoom="3"
       style="width: 100%; height: 600px"
   >
     <GMapHeatmap :data="heatData"></GMapHeatmap>
@@ -70,29 +72,9 @@ export default {
   data() {
     return {
       record: {},
-      center2: {
-        lat: 52.2985593,
-        lng: 104.2455337,
-      },
       heatData: [
-        {location: new google.maps.LatLng({lat: 52.2985593, lng: 104.2455337})},
-        {location: new google.maps.LatLng({lat: 52.2985593, lng: 105.2455337})},
-        {location: new google.maps.LatLng({lat: 52.2985593, lng: 106.2455337})},
-        {location: new google.maps.LatLng({lat: 52.2985593, lng: 107.2455337})},
-        {location: new google.maps.LatLng({lat: 52.2985593, lng: 108.2455337})},
-        {location: new google.maps.LatLng({lat: 52.2985593, lng: 109.2455337})},
-        {location: new google.maps.LatLng({lat: 52.2985593, lng: 110.2455337})},
-        {location: new google.maps.LatLng({lat: 52.2985593, lng: 111.2455337})},
       ],
       path: [
-        {lat: 52.2985593, lng: 104.2455337},
-        {lat: 52.2985593, lng: 105.2455337},
-        {lat: 52.2985593, lng: 106.2455337},
-        {lat: 52.2985593, lng: 107.2455337},
-        {lat: 52.2985593, lng: 108.2455337},
-        {lat: 52.2985593, lng: 109.2455337},
-        {lat: 52.2985593, lng: 110.2455337},
-        {lat: 52.2985593, lng: 111.2455337}
       ]
     }
   },
@@ -104,11 +86,24 @@ export default {
       RecordService.getRecord(this.$route.params.id).then(
           (response) => {
             this.record = response.data;
+            this.heatData = []
+            this.path = []
+            this.computeHistoryLocations(this.record)
           }
       )
     },
-    computeHistoryLocations() {
-
+    computeHistoryLocations(record) {
+      if(record.prev_records && record.prev_records.length > 0) {
+        for (let prev_record of record.prev_records) {
+          this.computeHistoryLocations(prev_record)
+        }
+      }
+      if(record.locations && record.locations.length > 0) {
+        for(let location of record.locations) {
+          this.heatData.push({location: new google.maps.LatLng({lat: location.latitude, lng: location.longitude})})
+          this.path.push({lat: location.latitude, lng: location.longitude})
+        }
+      }
     }
   }, computed: {
     center() {
@@ -116,6 +111,15 @@ export default {
         return {
           lat: this.record.locations.reduce((total, next) => total + next.latitude, 0) / this.record.locations.length,
           lng: this.record.locations.reduce((total, next) => total + next.longitude, 0) / this.record.locations.length
+        }
+      }
+      return {lat: 51.093048, lng: 6.842120}
+    },
+    history_center() {
+      if(this.path.length > 0) {
+        return {
+          lat: this.path.reduce((total, next) => total + next.lat, 0) / this.path.length,
+          lng: this.path.reduce((total, next) => total + next.lng, 0) / this.path.length
         }
       }
       return {lat: 51.093048, lng: 6.842120}
