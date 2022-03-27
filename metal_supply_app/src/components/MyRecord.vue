@@ -22,19 +22,34 @@
   <LinkRecordModal @onRecordLinked="getRecord" />
   <TransferRecordModal @onRecordTransferred="this.$router.push('/profile')"/>
   <div v-if="record.locations">
-  <GMapMap
-      :center="center"
-      :zoom="7"
-      map-type-id="terrain"
-      class="mb-5"
-  >
-    <GMapMarker
-        :key="position.timestamp"
-        v-for="position in record.locations"
-        :position="{lng: position.longitude, lat: position.latitude}"
-    />
-  </GMapMap>
+    <GMapMap
+        :center="center"
+        :zoom="7"
+        map-type-id="terrain"
+        class="mb-5"
+    >
+      <GMapMarker
+          :key="position.timestamp"
+          v-for="position in record.locations"
+          :position="{lng: position.longitude, lat: position.latitude}"
+      />
+
+    </GMapMap>
   </div>
+  <h3>History: </h3>
+  <GMapMap
+      :center="center2"
+      :zoom="7"
+      style="width: 100%; height: 600px"
+  >
+    <GMapHeatmap :data="heatData"></GMapHeatmap>
+    <GMapPolyline
+        :path="path"
+        :editable="false"
+        ref="polyline" />
+  </GMapMap>
+
+
 
 </template>
 
@@ -43,6 +58,7 @@ import RecordService from "@/services/record.service";
 import AddLocationModal from "@/components/AddLocationModal";
 import TransferRecordModal from "@/components/TransferRecordModal";
 import LinkRecordModal from "@/components/LinkRecordModal";
+/*global google*/
 
 export default {
   name: "MyRecord",
@@ -53,7 +69,31 @@ export default {
   },
   data() {
     return {
-      record: {}
+      record: {},
+      center2: {
+        lat: 52.2985593,
+        lng: 104.2455337,
+      },
+      heatData: [
+        {location: new google.maps.LatLng({lat: 52.2985593, lng: 104.2455337})},
+        {location: new google.maps.LatLng({lat: 52.2985593, lng: 105.2455337})},
+        {location: new google.maps.LatLng({lat: 52.2985593, lng: 106.2455337})},
+        {location: new google.maps.LatLng({lat: 52.2985593, lng: 107.2455337})},
+        {location: new google.maps.LatLng({lat: 52.2985593, lng: 108.2455337})},
+        {location: new google.maps.LatLng({lat: 52.2985593, lng: 109.2455337})},
+        {location: new google.maps.LatLng({lat: 52.2985593, lng: 110.2455337})},
+        {location: new google.maps.LatLng({lat: 52.2985593, lng: 111.2455337})},
+      ],
+      path: [
+        {lat: 52.2985593, lng: 104.2455337},
+        {lat: 52.2985593, lng: 105.2455337},
+        {lat: 52.2985593, lng: 106.2455337},
+        {lat: 52.2985593, lng: 107.2455337},
+        {lat: 52.2985593, lng: 108.2455337},
+        {lat: 52.2985593, lng: 109.2455337},
+        {lat: 52.2985593, lng: 110.2455337},
+        {lat: 52.2985593, lng: 111.2455337}
+      ]
     }
   },
   mounted() {

@@ -88,9 +88,9 @@ export default {
               self.message = "";
               self.successful = true;
               self.$refs.close.click();
+              this.$emit('onRecordTransferred');
             }, 3000);
             this.loading = false;
-            this.$emit('onRecordTransferred');
             this.receiving_agent_id = null;
             this.percentage = 0.1;
           }, error => {

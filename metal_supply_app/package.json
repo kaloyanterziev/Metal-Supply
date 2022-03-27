@@ -24,6 +24,7 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
+    "@types/google.maps": "^3.48.3",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
