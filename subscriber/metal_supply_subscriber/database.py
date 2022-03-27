@@ -410,7 +410,7 @@ class Database(object):
                 DELETE FROM record_links
                 WHERE record_id = '{}';
                 """.format(record_dict['record_id'])
-
+        LOGGER.debug(record_dict['next_record_ids'])
         insert_record_links = [
             """
             INSERT INTO record_links (

@@ -25,7 +25,7 @@ services:
     container_name: metal-supply-shell
     volumes:
       - .:/project/metal-supply
-      - /project/metal-supply/metal_supply_app/node_modules
+#      - /project/metal-supply/metal_supply_app/node_modules
     command: |
       bash -c "
         metal-supply-protogen
@@ -165,7 +165,7 @@ services:
 #    ports:
 #      - "8040:80"
 #    depends_on:
-#      - simple-supply-rest-api
+#      - metal-supply-rest-api
 #    command: |
 #      bash -c "
 #        npm run build

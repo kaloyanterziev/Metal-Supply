@@ -7,6 +7,8 @@ RUN \
  && echo 'deb [arch=amd64] http://repo.sawtooth.me/ubuntu/chime/stable bionic universe' >> /etc/apt/sources.list \
  && apt-get update
 
+RUN apt-get install -y apt-transport-https
+
 RUN apt-get install -y -q python3-sawtooth-sdk
 
 WORKDIR /project/metal-supply

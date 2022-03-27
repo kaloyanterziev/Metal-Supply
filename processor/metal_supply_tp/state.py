@@ -184,7 +184,7 @@ class MetalSupplyState(object):
             container.ParseFromString(state_entries[0].data)
             for record in container.entries:
                 if record.record_id == record_id:
-                    record.next_record_ids.extend(next_record_id)
+                    record.next_record_ids.append(next_record_id)
 
         data = container.SerializeToString()
         updated_state = {}

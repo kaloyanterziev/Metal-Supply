@@ -253,13 +253,16 @@ class Database(object):
                     record['owners'] = await cursor.fetchall()
 
                     return record
-                except TypeError:
+                except TypeError as err:
+                    LOGGER.error(err)
                     return None
 
-    async def fetch_record_resource(self, record_public_key, agent_id, record_keys = set()):
+    async def fetch_record_resource(self, record_public_key, agent_id, record_keys=None):
+        if record_keys is None:
+            record_keys = set()
         record_keys.add(record_public_key)
         fetch_record = """
-        SELECT id, material_type, material_origin, tonnes, published, next_record_id FROM records
+        SELECT id, material_type, material_origin, tonnes, published FROM records
         WHERE record_id='{0}'
         AND ({1}) >= start_block_num
         AND ({1}) < end_block_num;
@@ -306,13 +309,18 @@ class Database(object):
                     await cursor.execute(fetch_record_ownership)
                     record['tonnes'] = record['tonnes'] / 100.0 * (await cursor.fetchone())['percentage_owner']
 
-                    next_record_ids = await cursor.execute(fetch_record_links)
-                    record['next_records'] = []
-                    for next_record_id in next_record_ids:
-                        record['next_records'].add(await self.fetch_record_resource(next_record_id, agent_id, record_keys))
-
+                    await cursor.execute(fetch_record_links)
+                    next_record_ids = await cursor.fetchall()
+                    next_records = []
+                    for next_record_id_row in next_record_ids:
+                        next_record_id = next_record_id_row['next_record_id']
+                        if next_record_id not in record_keys:
+                            next_record = await self.fetch_record_resource(next_record_id, agent_id, record_keys)
+                            next_records.append(next_record)
+                    record['next_records'] = next_records
                     return record
-                except TypeError:
+                except TypeError as err:
+                    LOGGER.error(err)
                     return None
 
     async def fetch_all_record_resources(self):
@@ -357,7 +365,8 @@ class Database(object):
                         del record['record_id']
 
                     return records
-                except TypeError:
+                except TypeError as err:
+                    LOGGER.error(err)
                     return []
 
 
@@ -396,5 +405,6 @@ class Database(object):
                         del record['percentage_owner']
 
                     return records
-                except TypeError:
+                except TypeError as err:
+                    LOGGER.error(err)
                     return []
