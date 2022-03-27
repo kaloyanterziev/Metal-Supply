@@ -22,3 +22,7 @@ node_modules/
 **/__pycache__/
 *.py[cod]
 *$py.class
+protobuf/metal_supply_protobuf/__pycache__/
+processor/metal_supply_tp/__pycache__/
+rest_api/metal_supply_rest_api/__pycache__/
+subscriber/metal_supply_subscriber/__pycache__/
