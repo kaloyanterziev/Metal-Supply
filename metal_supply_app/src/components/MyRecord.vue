@@ -7,7 +7,9 @@
     <p class="card-text" v-if="record.published != null">{{record.published ? "Published" : "Private"}}</p>
   </header>
   <h3>Contents: </h3>
-
+  <ContentChart v-if="record.contents"
+                :dataLabels="record.contents.map(function(item){return item.metal;})"
+                :dataValues="record.contents.map(function(item){return item.percentage;})"/>
   <h3>Locations: </h3>
   <div class="d-flex justify-content-end  mb-4">
     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#link-record-modal">
@@ -60,6 +62,7 @@ import RecordService from "@/services/record.service";
 import AddLocationModal from "@/components/AddLocationModal";
 import TransferRecordModal from "@/components/TransferRecordModal";
 import LinkRecordModal from "@/components/LinkRecordModal";
+import ContentChart from "@/components/ContentChart";
 /*global google*/
 
 export default {
@@ -67,7 +70,8 @@ export default {
   components: {
     LinkRecordModal,
     AddLocationModal,
-    TransferRecordModal
+    TransferRecordModal,
+    ContentChart
   },
   data() {
     return {
@@ -75,7 +79,7 @@ export default {
       heatData: [
       ],
       path: [
-      ]
+      ],
     }
   },
   mounted() {
