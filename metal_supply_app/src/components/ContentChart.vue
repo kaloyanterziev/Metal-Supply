@@ -1,9 +1,5 @@
 <template>
   <div style="width: 400px">
-    <div style="display: flex; justify-content: center">
-      <button type="button" @click="shuffleData">Add data</button>
-      <button type="button" @click="switchLegend">Swicth legends</button>
-    </div>
     <DoughnutChart v-bind="doughnutChartProps" />
   </div>
 </template>
@@ -11,18 +7,22 @@
 <script>
 import { computed, defineComponent, ref } from "vue";
 
-
-import { DoughnutChart, useDoughnutChart } from "vue-chart-3";
 // eslint-disable-next-line no-unused-vars
 import { Chart, ChartData, ChartOptions, registerables } from "chart.js";
 Chart.register(...registerables);
+import { DoughnutChart, useDoughnutChart } from "vue-chart-3";
+
 export default defineComponent({
   name: "App",
   components: { DoughnutChart },
-  setup() {
-    const dataValues = ref([30, 40, 60, 70, 5]);
-    const dataLabels = ref(["Paris", "Nîmes", "Toulon", "Perpignan", "Autre"]);
-    const toggleLegend = ref(true);
+  props: ['dataValues', 'dataLabels'],
+  setup(props)
+  {
+    console.log(props.dataLabels, props.dataValues)
+    const dataValues = ref(props.dataValues);
+    const dataLabels = ref(props.dataLabels);
+    // const dataValues = ref([30, 40, 60, 70, 5]);
+    // const dataLabels = ref(["Paris", "Nîmes", "Toulon", "Perpignan", "Autre"]);
 
     const testData = computed(() => ({
       labels: dataLabels.value,
@@ -35,6 +35,10 @@ export default defineComponent({
             "#123E6B",
             "#97B0C4",
             "#A5C8ED",
+              "#77dd77",
+              "#836953",
+              "#89cff0",
+              "#99c5c4"
           ],
         },
       ],
@@ -44,15 +48,15 @@ export default defineComponent({
       scales: {
         myScale: {
           type: "logarithmic",
-          position: toggleLegend.value ? "left" : "right",
+          position: "left",
         },
       },
       plugins: {
         legend: {
-          position: toggleLegend.value ? "top" : "bottom",
+          position: "top"
         },
         title: {
-          display: true,
+          display: false,
           text: "Chart.js Doughnut Chart",
         },
       },
@@ -63,34 +67,17 @@ export default defineComponent({
       options,
     });
 
-    let index = ref(20);
-
-    function shuffleData() {
-      // dataValues.value = shuffle(dataValues.value);
-      dataValues.value.push(index.value);
-      dataLabels.value.push("Other" + index.value);
-      console.log(dataValues.value);
-      console.log(doughnutChartRef.value.chartInstance);
-      index.value++;
-    }
-
-    function switchLegend() {
-      toggleLegend.value = !toggleLegend.value;
-    }
-
     return {
-      shuffleData,
-      switchLegend,
       testData,
       options,
       doughnutChartRef,
       doughnutChartProps,
     };
-  },
+  }
 });
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
