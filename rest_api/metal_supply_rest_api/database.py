@@ -356,11 +356,19 @@ class Database(object):
                         AND ({1}) < record_owners.end_block_num;
                         """.format(record['record_id'], LATEST_BLOCK_NUM)
 
+                        fetch_record_contents = """
+                                        SELECT metal, percentage FROM record_contents
+                                        WHERE record_id='{0}';
+                                        """.format(record['record_id'], LATEST_BLOCK_NUM)
+
                         await cursor.execute(fetch_record_locations)
                         record['locations'] = await cursor.fetchall()
 
                         await cursor.execute(fetch_record_owners)
                         record['owners'] = await cursor.fetchall()
+
+                        await cursor.execute(fetch_record_contents)
+                        record['contents'] = await cursor.fetchall()
 
                         del record['record_id']
 
@@ -396,8 +404,16 @@ class Database(object):
                         AND ({1}) < end_block_num;
                         """.format(record['record_id'], LATEST_BLOCK_NUM)
 
+                        fetch_record_contents = """
+                        SELECT metal, percentage FROM record_contents
+                        WHERE record_id='{0}';
+                        """.format(record['record_id'], LATEST_BLOCK_NUM)
+
                         await cursor.execute(fetch_record_locations)
                         record['locations'] = await cursor.fetchall()
+
+                        await cursor.execute(fetch_record_contents)
+                        record['contents'] = await cursor.fetchall()
 
                         record['tonnes'] = record['tonnes'] / 100.0 * record['percentage_owner']
 
