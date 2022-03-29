@@ -21,28 +21,24 @@
       </button>
     </div>
     <AddRecordModal @onRecordCreate="getAgentRecords"/>
-    <div class="card-columns">
-      <router-link class="card"
-           v-for="record in records"
-           v-bind:key="record.id"
-           :to="'/my-records/' + record.id"
-           style="text-decoration: none; color: inherit;"
-      >
-        <div class="card-body">
-          <h5 class="card-title">{{record.material_origin}}</h5>
-          <p class="card-text">{{record.material_type}}</p>
-          <p class="card-text">{{record.tonnes}} tonnes</p>
-          <p class="card-text">{{record.published ? "Published" : "Private"}}</p>
-<!--          <div class="card-text"-->
-<!--               v-for="location in record.locations"-->
-<!--               v-bind:key="location.timestamp">-->
-<!--            Lat: {{location.latitude}},  Long:{{location.longitude}}-->
-<!--          </div>-->
-          <p class="card-text">{{record.address}}</p>
-          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-        </div>
-      </router-link>
-    </div>
+<!--    <div class="card-columns">-->
+<!--      <router-link class="card"-->
+<!--           v-for="record in records"-->
+<!--           v-bind:key="record.id"-->
+<!--           :to="'/my-records/' + record.id"-->
+<!--           style="text-decoration: none; color: inherit;"-->
+<!--      >-->
+<!--        <div class="card-body">-->
+<!--          <h5 class="card-title">{{record.material_origin}}</h5>-->
+<!--          <p class="card-text">{{record.material_type}}</p>-->
+<!--          <p class="card-text">{{record.tonnes}} tonnes</p>-->
+<!--          <p class="card-text">{{record.published ? "Published" : "Private"}}</p>-->
+<!--          <p class="card-text">{{record.address}}</p>-->
+<!--          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>-->
+<!--        </div>-->
+<!--      </router-link>-->
+<!--    </div>-->
+    <RecordCards :records="records" :isCardLink="true" :isLastUpdate="true" />
   </div>
 </template>
 
@@ -92,7 +88,8 @@ export default {
     getAddress(location, index) {
       GoogleApisService.reverseGeocoding(location.latitude, location.longitude)
         .then((response) => {
-          this.records[index]['address'] = response.data.results[0].formatted_address;
+          if(response.data.results.length > 0)
+            this.records[index]['address'] = response.data.results[0].formatted_address;
         })
     }
   }

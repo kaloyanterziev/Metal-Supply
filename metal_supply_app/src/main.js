@@ -6,6 +6,8 @@ import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from './plugins/font-awesome'
 import  VueGoogleMaps from '@fawmi/vue-google-maps'
+import RecordCards from "@/components/RecordCards";
+import ContentChart from "@/components/ContentChart";
 
 
 createApp(App)
@@ -18,4 +20,6 @@ createApp(App)
         },
     })
     .component("font-awesome-icon", FontAwesomeIcon)
+    .component("RecordCards", RecordCards)
+    .component("ContentChart", ContentChart)
     .mount("#app");

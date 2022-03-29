@@ -9,8 +9,9 @@
   <h3>Contents: </h3>
   <ContentChart v-if="record.contents"
                 :dataLabels="record.contents.map(function(item){return item.metal;})"
-                :dataValues="record.contents.map(function(item){return item.percentage;})"/>
-  <h3>Locations: </h3>
+                :dataValues="record.contents.map(function(item){return item.percentage;})"
+                :large="true"/>
+  <h3 class="mt-4">Locations: </h3>
   <div class="d-flex justify-content-end  mb-4">
     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#link-record-modal">
       <font-awesome-icon icon="link" /> Link Record
@@ -40,7 +41,7 @@
 
     </GMapMap>
   </div>
-  <h3>History: </h3>
+  <h3>History Analysis: </h3>
   <GMapMap
       :center="history_center"
       :zoom="3"
@@ -52,8 +53,7 @@
         :editable="false"
         ref="polyline" />
   </GMapMap>
-
-
+  <RecordCards :records="subRecords" :isCardLink="false" :isLastUpdate="false" class="mt-3"/>
 
 </template>
 
@@ -62,7 +62,6 @@ import RecordService from "@/services/record.service";
 import AddLocationModal from "@/components/AddLocationModal";
 import TransferRecordModal from "@/components/TransferRecordModal";
 import LinkRecordModal from "@/components/LinkRecordModal";
-import ContentChart from "@/components/ContentChart";
 /*global google*/
 
 export default {
@@ -70,16 +69,14 @@ export default {
   components: {
     LinkRecordModal,
     AddLocationModal,
-    TransferRecordModal,
-    ContentChart
+    TransferRecordModal
   },
   data() {
     return {
       record: {},
-      heatData: [
-      ],
-      path: [
-      ],
+      subRecords: [],
+      heatData: [],
+      path: []
     }
   },
   mounted() {
@@ -92,22 +89,31 @@ export default {
             this.record = response.data;
             this.heatData = []
             this.path = []
-            this.computeHistoryLocations(this.record)
+            this.subRecords = []
+            this.computeStatistics(this.record, 0)
           }
       )
     },
-    computeHistoryLocations(record) {
+    computeStatistics(record, depth) {
+      // Pre-order
+      if(depth > 0 && record.contents) {
+        this.subRecords.push(record)
+      }
+
       if(record.prev_records && record.prev_records.length > 0) {
         for (let prev_record of record.prev_records) {
-          this.computeHistoryLocations(prev_record)
+          this.computeStatistics(prev_record, depth+1)
         }
       }
+
+      // Post-order
       if(record.locations && record.locations.length > 0) {
         for(let location of record.locations) {
           this.heatData.push({location: new google.maps.LatLng({lat: location.latitude, lng: location.longitude})})
           this.path.push({lat: location.latitude, lng: location.longitude})
         }
       }
+
     }
   }, computed: {
     center() {
@@ -139,4 +145,7 @@ export default {
   /*width: 100% !important;*/
   height: 35rem !important;
 }
+/*p {*/
+/*  text-align: center;*/
+/*}*/
 </style>

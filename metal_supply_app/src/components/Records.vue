@@ -8,30 +8,32 @@
       <font-awesome-icon icon="plus" /> New Record
     </button>
   </div>
-  <div class="card-columns">
-    <div class="card"
-         v-for="record in records"
-         v-bind:key="record.id"
-    >
-      <div class="card-body">
-        <h5 class="card-title">{{record.material_origin}}</h5>
-        <p class="card-text">{{record.material_type}}</p>
-        <p class="card-text">{{record.tonnes}} tonnes</p>
-          <div class="card-text"
-            v-for="owner in record.owners"
-            v-bind:key="owner.id">
-            <router-link :to="'/agents/' + owner.id">{{owner.name}}</router-link>
-          </div>
-        <p class="card-text">{{record.address}}</p>
-        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-      </div>
-    </div>
-  </div>
+<!--  <div class="card-columns">-->
+<!--    <div class="card"-->
+<!--         v-for="record in records"-->
+<!--         v-bind:key="record.id"-->
+<!--    >-->
+<!--      <div class="card-body">-->
+<!--        <h5 class="card-title">{{record.material_origin}}</h5>-->
+<!--        <p class="card-text">{{record.material_type}}</p>-->
+<!--        <p class="card-text">{{record.tonnes}} tonnes</p>-->
+<!--          <div class="card-text"-->
+<!--            v-for="owner in record.owners"-->
+<!--            v-bind:key="owner.id">-->
+<!--            <router-link :to="'/agents/' + owner.id">{{owner.name}}</router-link>-->
+<!--          </div>-->
+<!--        <p class="card-text">{{record.address}}</p>-->
+<!--        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+  <RecordCards :records="records" :isCardLink="false" :isLastUpdate="true" />
   <AddRecordModal @onRecordCreate="getAllRecords"/>
 </template>
 
 <script>
 import RecordService from "../services/record.service";
+import RecordCards from "@/components/RecordCards";
 import AddRecordModal from "@/components/AddRecordModal";
 import GoogleApisService from "@/services/googleapis.service";
 
@@ -39,7 +41,8 @@ import GoogleApisService from "@/services/googleapis.service";
 export default {
   name: "Records",
   components : {
-    AddRecordModal
+    AddRecordModal,
+    RecordCards
   },
   data() {
     return {
@@ -55,7 +58,7 @@ export default {
           (response) => {
             this.records = response.data;
             this.records.forEach((record, index) => {
-              if(record.locations) {
+              if(record.locations && record.locations.length > 0) {
                 let location = record.locations.reduce((prev, current) => (prev.timestamp > current.timestamp) ? prev : current)
                 this.getAddress(location, index)
               }

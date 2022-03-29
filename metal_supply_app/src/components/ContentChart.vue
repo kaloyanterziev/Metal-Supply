@@ -1,6 +1,6 @@
 <template>
-  <div style="width: 400px">
-    <DoughnutChart v-bind="doughnutChartProps" />
+  <div :style="large ? 'width: 400px' : 'width: 200px'">
+    <DoughnutChart class="align-content-center" v-bind="doughnutChartProps" />
   </div>
 </template>
 
@@ -15,14 +15,11 @@ import { DoughnutChart, useDoughnutChart } from "vue-chart-3";
 export default defineComponent({
   name: "App",
   components: { DoughnutChart },
-  props: ['dataValues', 'dataLabels'],
+  props: ['dataValues', 'dataLabels', 'large'],
   setup(props)
   {
-    console.log(props.dataLabels, props.dataValues)
     const dataValues = ref(props.dataValues);
     const dataLabels = ref(props.dataLabels);
-    // const dataValues = ref([30, 40, 60, 70, 5]);
-    // const dataLabels = ref(["Paris", "Nîmes", "Toulon", "Perpignan", "Autre"]);
 
     const testData = computed(() => ({
       labels: dataLabels.value,
@@ -78,12 +75,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>

@@ -19,7 +19,7 @@ node_modules/
 .docusaurus
 
 # Byte-compiled / optimized / DLL files
-**/__pycache__/
+__pycache__/
 *.py[cod]
 *$py.class
 protobuf/metal_supply_protobuf/__pycache__
