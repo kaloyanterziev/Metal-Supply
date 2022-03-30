@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # -----------------------------------------------------------------------------
-# Modifications copyright (C) 2021 <Kaloyan Terizev>
+# Modifications copyright (C) 2021 <Kaloyan Terziev>
 
 import logging
 import time
@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS records (
     material_origin    varchar,
     tonnes             double precision,
     published          boolean,
+    timestamp          bigint,
     start_block_num    bigint,
     end_block_num      bigint
 );
@@ -325,10 +326,12 @@ class Database(object):
     def insert_record(self, record_dict):
         update_record = """
         UPDATE records 
-        SET start_block_num = {},
+        SET timestamp = '{}',
+        start_block_num = {},
         end_block_num = {}
         WHERE record_id = '{}';
         """.format(
+            record_dict['timestamp'],
             record_dict['start_block_num'],
             record_dict['end_block_num'],
             record_dict['record_id'])

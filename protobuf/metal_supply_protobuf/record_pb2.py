@@ -18,7 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=b'\n\"metal_supply_protobuf/record.proto\"\xc4\x02\n\x06Record\x12\x11\n\trecord_id\x18\x01 \x01(\t\x12\x17\n\x0fnext_record_ids\x18\x02 \x03(\t\x12\x1d\n\x06owners\x18\x03 \x03(\x0b\x32\r.Record.Owner\x12#\n\tlocations\x18\x04 \x03(\x0b\x32\x10.Record.Location\x1a\x46\n\x05Owner\x12\x10\n\x08\x61gent_id\x18\x01 \x01(\t\x12\x18\n\x10percentage_owner\x18\x02 \x01(\x01\x12\x11\n\ttimestamp\x18\x03 \x01(\x04\x1aT\n\x08Location\x12\x10\n\x08latitude\x18\x01 \x01(\x01\x12\x11\n\tlongitude\x18\x02 \x01(\x01\x12\x10\n\x08\x61gent_id\x18\x03 \x01(\t\x12\x11\n\ttimestamp\x18\x04 \x01(\x04\x1a,\n\x07\x43ontent\x12\r\n\x05metal\x18\x01 \x01(\t\x12\x12\n\npercentage\x18\x02 \x01(\x01\"+\n\x0fRecordContainer\x12\x18\n\x07\x65ntries\x18\x01 \x03(\x0b\x32\x07.Recordb\x06proto3'
+  serialized_pb=b'\n\"metal_supply_protobuf/record.proto\"\xd7\x02\n\x06Record\x12\x11\n\trecord_id\x18\x01 \x01(\t\x12\x17\n\x0fnext_record_ids\x18\x02 \x03(\t\x12\x1d\n\x06owners\x18\x03 \x03(\x0b\x32\r.Record.Owner\x12#\n\tlocations\x18\x04 \x03(\x0b\x32\x10.Record.Location\x12\x11\n\ttimestamp\x18\x05 \x01(\x04\x1a\x46\n\x05Owner\x12\x10\n\x08\x61gent_id\x18\x01 \x01(\t\x12\x18\n\x10percentage_owner\x18\x02 \x01(\x01\x12\x11\n\ttimestamp\x18\x03 \x01(\x04\x1aT\n\x08Location\x12\x10\n\x08latitude\x18\x01 \x01(\x01\x12\x11\n\tlongitude\x18\x02 \x01(\x01\x12\x10\n\x08\x61gent_id\x18\x03 \x01(\t\x12\x11\n\ttimestamp\x18\x04 \x01(\x04\x1a,\n\x07\x43ontent\x12\r\n\x05metal\x18\x01 \x01(\t\x12\x12\n\npercentage\x18\x02 \x01(\x01\"+\n\x0fRecordContainer\x12\x18\n\x07\x65ntries\x18\x01 \x03(\x0b\x32\x07.Recordb\x06proto3'
 )
 
 
@@ -64,8 +64,8 @@ _RECORD_OWNER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=161,
-  serialized_end=231,
+  serialized_start=180,
+  serialized_end=250,
 )
 
 _RECORD_LOCATION = _descriptor.Descriptor(
@@ -115,8 +115,8 @@ _RECORD_LOCATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=233,
-  serialized_end=317,
+  serialized_start=252,
+  serialized_end=336,
 )
 
 _RECORD_CONTENT = _descriptor.Descriptor(
@@ -152,8 +152,8 @@ _RECORD_CONTENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=319,
-  serialized_end=363,
+  serialized_start=338,
+  serialized_end=382,
 )
 
 _RECORD = _descriptor.Descriptor(
@@ -191,6 +191,13 @@ _RECORD = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='timestamp', full_name='Record.timestamp', index=4,
+      number=5, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -204,7 +211,7 @@ _RECORD = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=39,
-  serialized_end=363,
+  serialized_end=382,
 )
 
 
@@ -234,8 +241,8 @@ _RECORDCONTAINER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=365,
-  serialized_end=408,
+  serialized_start=384,
+  serialized_end=427,
 )
 
 _RECORD_OWNER.containing_type = _RECORD

@@ -262,7 +262,7 @@ class Database(object):
             record_keys = set()
         record_keys.add(record_public_key)
         fetch_record = """
-        SELECT id, material_type, material_origin, tonnes, published FROM records
+        SELECT id, material_type, material_origin, tonnes, published, timestamp FROM records
         WHERE record_id='{0}'
         AND ({1}) >= start_block_num
         AND ({1}) < end_block_num;
@@ -325,7 +325,7 @@ class Database(object):
 
     async def fetch_all_record_resources(self):
         fetch_records = """
-        SELECT id, record_id, material_type, material_origin, tonnes FROM records
+        SELECT id, record_id, material_type, material_origin, tonnes, timestamp FROM records
         WHERE published 
         AND ({0}) >= start_block_num
         AND ({0}) < end_block_num;
@@ -381,7 +381,7 @@ class Database(object):
 
     async def fetch_all_agent_records(self, agent_public_key):
         fetch_records = """
-        SELECT records.id, records.record_id, records.material_type, records.material_origin, records.tonnes, records.published, record_owners.percentage_owner
+        SELECT records.id, records.record_id, records.material_type, records.material_origin, records.tonnes, records.published, records.timestamp, record_owners.percentage_owner
         FROM records
         JOIN record_owners ON records.record_id = record_owners.record_id
         WHERE record_owners.agent_id = '{0}' 

@@ -13,6 +13,7 @@
           <p class="card-text" v-if="record.tonnes">{{record.tonnes}} tonnes</p>
           <p class="card-text" v-if="record.published">{{record.published ? "Published" : "Private"}}</p>
           <p class="card-text" v-if="record.address">{{record.address}}</p>
+          <p class="card-text" v-if="record.timestamp">{{new Date(record.timestamp*1000).toLocaleDateString("en-GB")}} {{new Date(record.timestamp*1000).toLocaleTimeString("en-GB")}}</p>
           <ContentChart v-if="record.contents"
                         :dataLabels="record.contents.map(function(item){return item.metal;})"
                         :dataValues="record.contents.map(function(item){return item.percentage;})"
@@ -34,6 +35,7 @@
           <p class="card-text" v-if="record.tonnes">{{record.tonnes}} tonnes</p>
           <p class="card-text" v-if="record.published">{{record.published ? "Published" : "Private"}}</p>
           <p class="card-text" v-if="record.address">{{record.address}}</p>
+          <p class="card-text" v-if="record.timestamp">{{new Date(record.timestamp*1000).toLocaleDateString("en-GB")}} {{new Date(record.timestamp*1000).toLocaleTimeString("en-GB")}}</p>
           <div v-if="record.owners">
             <div class="card-text"
                  v-for="owner in record.owners"

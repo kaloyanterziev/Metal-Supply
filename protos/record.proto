@@ -41,6 +41,8 @@ message Record {
     repeated Owner owners = 3;
 
     repeated Location locations = 4;
+
+    uint64 timestamp = 5;
 }
 
 

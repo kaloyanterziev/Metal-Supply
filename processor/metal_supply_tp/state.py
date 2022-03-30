@@ -89,7 +89,7 @@ class MetalSupplyState(object):
             latitude (double): Initial latitude of the record
             longitude (double): Initial latitude of the record
             record_id (str): Unique ID of the record
-            timestamp (int): Unix UTC timestamp of when the agent was created
+            timestamp (int): Unix UTC timestamp of when the record was created
         """
         address = addresser.get_record_address(record_id)
 
@@ -105,7 +105,8 @@ class MetalSupplyState(object):
         record = record_pb2.Record(
             record_id=record_id,
             owners=[owner],
-            locations=[location])
+            locations=[location],
+            timestamp=timestamp)
         container = record_pb2.RecordContainer()
         state_entries = self._context.get_state(
             addresses=[address], timeout=self._timeout)

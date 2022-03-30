@@ -2,7 +2,7 @@
   <div class="container">
     <header class="jumbotron">
       <h3>
-        <strong>{{currentUser.name}}</strong> Profile
+        <strong>{{currentUser.name}}</strong>
       </h3>
     </header>
     <p>
@@ -11,8 +11,9 @@
     </p>
     <p>
       <strong>Role:</strong>
-      {{currentUser.role}}
+      {{roles[currentUser.role]}}
     </p>
+    <hr />
     <h5>My Records:</h5>
     <div class=" container row justify-content-between mb-4">
       <input class="form-control col-lg-10" type="search" placeholder="Search" aria-label="Search">
@@ -21,23 +22,6 @@
       </button>
     </div>
     <AddRecordModal @onRecordCreate="getAgentRecords"/>
-<!--    <div class="card-columns">-->
-<!--      <router-link class="card"-->
-<!--           v-for="record in records"-->
-<!--           v-bind:key="record.id"-->
-<!--           :to="'/my-records/' + record.id"-->
-<!--           style="text-decoration: none; color: inherit;"-->
-<!--      >-->
-<!--        <div class="card-body">-->
-<!--          <h5 class="card-title">{{record.material_origin}}</h5>-->
-<!--          <p class="card-text">{{record.material_type}}</p>-->
-<!--          <p class="card-text">{{record.tonnes}} tonnes</p>-->
-<!--          <p class="card-text">{{record.published ? "Published" : "Private"}}</p>-->
-<!--          <p class="card-text">{{record.address}}</p>-->
-<!--          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>-->
-<!--        </div>-->
-<!--      </router-link>-->
-<!--    </div>-->
     <RecordCards :records="records" :isCardLink="true" :isLastUpdate="true" />
   </div>
 </template>
@@ -60,7 +44,12 @@ export default {
   data() {
     return {
       message: "",
-      records: []
+      records: [],
+      roles: {
+        0: "Recycler",
+        1: "Converter",
+        2: "Waste Owner"
+      }
     }
   },
   mounted() {

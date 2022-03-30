@@ -21,7 +21,7 @@
               </div>
               <div class="form-group">
                 <label for="record.tonnes">Tonnes</label>
-                <input v-model="record.tonnes" name="record.tonnes" type="number" required class="form-control" />
+                <input v-model="record.tonnes" name="record.tonnes" type="number" required class="form-control" min="0" />
               </div>
               <div class="form-group">
                 <label for="record.latitude">Latitude</label>
@@ -110,6 +110,13 @@ export default {
       this.successful = false;
       this.loading = true;
 
+      let sumOfContentPercentages = this.record.contents.reduce((prev, curr) => prev + curr.percentage, 0)
+      if(sumOfContentPercentages>100) {
+        this.message = "Contents should not exceed 100%"
+        this.loading = false;
+        return
+      }
+
       RecordService.createRecord(this.record).then(
           data => {
             this.message = data.data.data;
@@ -123,7 +130,7 @@ export default {
                 contents: [{"percentage": 0, "metal": ""}]
               }
               self.$refs.close.click();
-            }, 3000);
+            }, 1000);
             this.$emit('onRecordCreate');
             this.$refs['add-record-modal'].hide();
           }, error => {
