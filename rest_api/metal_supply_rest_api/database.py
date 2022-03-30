@@ -101,14 +101,16 @@ class Database(object):
                     name,
                     email
                 )
-                VALUES ('{}', '{}', '{}');
+                VALUES ('{}', '{}', '{}')
+                RETURNING id;
                 """.format(
             public_key, name, email)
         async with self._pool.acquire() as conn:
             async with conn.cursor(cursor_factory=RealDictCursor) as cursor:
                 await cursor.execute(insert)
-
+                id_of_new_row = (await cursor.fetchone())['id']
             conn.commit()
+        return id_of_new_row
 
     async def fetch_agent_resource(self, agent_id):
         fetch = """

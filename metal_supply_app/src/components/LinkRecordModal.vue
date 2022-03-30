@@ -15,7 +15,7 @@
             <div class="form-group">
               <select v-model="next_record_id" name="next_record_id" class="form-control">
                 <option v-for="record in records" v-bind:key="record.id"
-                        :value="record.id">{{record.material_type}} {{record.material_origin}} {{record.tonnes}}
+                        :value="record.id">Record {{record.id}} - {{record.material_origin}} {{record.material_type}} - {{record.tonnes}} tonnes
                 </option>
               </select>
             </div>
@@ -62,7 +62,7 @@ export default {
   mounted() {
     UserService.getAgentRecords().then(
         (response) => {
-          this.records = response.data;
+          this.records = response.data.filter(record => record.id !== this.record_id)
         },
         (error) => {
           console.log(error)

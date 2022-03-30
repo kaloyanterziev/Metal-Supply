@@ -67,7 +67,7 @@ export default {
   mounted() {
     UserService.getAllAgents().then(
         (response) => {
-          this.agents = response.data;
+          this.agents = response.data.filter(agent => agent.id !== this.currentUser.id)
         },
         (error) => {
           console.log(error)
@@ -105,6 +105,9 @@ export default {
   computed: {
     record_id() {
       return this.$route.params.id;
+    },
+    currentUser() {
+      return this.$store.state.auth.user;
     }
   }
 };

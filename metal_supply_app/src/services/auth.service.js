@@ -30,6 +30,7 @@ class AuthService {
       if (response.data.authorization) {
         delete user.password;
         user.authorization = response.data.authorization;
+        user.id = response.data.id
         localStorage.setItem('user', JSON.stringify(user));
       }
 

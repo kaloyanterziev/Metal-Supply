@@ -58,6 +58,7 @@ class RouteHandler(object):
         token = generate_auth_token(
             request.app['secret_key'], auth_info.get('public_key'))
         return json_response({
+            'id': auth_info.get('id'),
             'authorization': token,
             'name': auth_info.get('name'),
             'email': auth_info.get('email'),
@@ -71,7 +72,7 @@ class RouteHandler(object):
 
         public_key, private_key = self._messenger.get_new_key_pair()
 
-        await self._database.create_agent_entry(public_key, body.get('name'), body.get('email'))
+        id_of_row = await self._database.create_agent_entry(public_key, body.get('name'), body.get('email'))
 
         await self._messenger.send_create_agent_transaction(
             private_key=private_key,
@@ -88,7 +89,10 @@ class RouteHandler(object):
         token = generate_auth_token(
             request.app['secret_key'], public_key)
 
-        return json_response({'authorization': token})
+        return json_response({
+            'authorization': token,
+            'id': id_of_row
+        })
 
     async def list_agents(self, _request):
         agent_list = await self._database.fetch_all_agent_resources()

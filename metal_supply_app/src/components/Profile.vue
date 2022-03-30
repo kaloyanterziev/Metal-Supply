@@ -56,6 +56,7 @@ export default {
     if (!this.currentUser) {
       this.$router.push('/login');
     }
+    console.log(this.currentUser)
     this.getAgentRecords()
   },
   methods: {
