@@ -52,6 +52,14 @@
       >
         {{ message }}
       </div>
+      <div
+          v-if="successful"
+          class="alert alert-warning"
+      >
+        <p><strong>Please save your Public and Private Keys:</strong></p>
+        <p>Public Key: <strong>{{public_key}}</strong></p>
+        <p>Private Key: <strong>{{private_key}}</strong></p>
+      </div>
     </div>
   </div>
 </template>
@@ -94,6 +102,8 @@ export default {
       loading: false,
       message: "",
       schema,
+      private_key: "",
+      public_key: ""
     };
   },
   computed: {
@@ -115,8 +125,10 @@ export default {
       this.loading = true;
 
       this.$store.dispatch("auth/register", user).then(
-        () => {
-          this.message = "Successful Register";
+        (response) => {
+          this.message = "Successful Register"
+          this.public_key = response.public_key
+          this.private_key = response.private_key
           this.successful = true;
           this.loading = false;
         },

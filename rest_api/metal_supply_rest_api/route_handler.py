@@ -91,7 +91,9 @@ class RouteHandler(object):
 
         return json_response({
             'authorization': token,
-            'id': id_of_row
+            'id': id_of_row,
+            'public_key': public_key,
+            'private_key': private_key
         })
 
     async def list_agents(self, _request):
