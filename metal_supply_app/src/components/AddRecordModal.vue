@@ -21,7 +21,7 @@
               </div>
               <div class="form-group">
                 <label for="record.tonnes">Tonnes</label>
-                <input v-model="record.tonnes" name="record.tonnes" type="number" required class="form-control" min="0" />
+                <input v-model="record.tonnes" name="record.tonnes" type="number" required class="form-control" step="any" min="0" />
               </div>
               <div class="form-group">
                 <label for="record.latitude">Latitude</label>

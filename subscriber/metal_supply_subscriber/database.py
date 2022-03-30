@@ -111,6 +111,7 @@ CREATE TABLE IF NOT EXISTS agents (
     public_key       varchar,
     name             varchar,
     email            varchar,
+    company          varchar,
     timestamp        bigint,
     role_id          smallint,
     start_block_num  bigint,

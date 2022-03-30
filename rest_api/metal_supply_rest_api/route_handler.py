@@ -62,17 +62,18 @@ class RouteHandler(object):
             'authorization': token,
             'name': auth_info.get('name'),
             'email': auth_info.get('email'),
-            'role': auth_info.get('role_id')
+            'role': auth_info.get('role_id'),
+            'company': auth_info.get('company')
         })
 
     async def create_agent(self, request):
         body = await decode_request(request)
-        required_fields = ['name', 'email', 'password', 'role']
+        required_fields = ['name', 'email', 'password', 'role', 'company']
         validate_fields(required_fields, body)
 
         public_key, private_key = self._messenger.get_new_key_pair()
 
-        id_of_row = await self._database.create_agent_entry(public_key, body.get('name'), body.get('email'))
+        id_of_row = await self._database.create_agent_entry(public_key, body.get('name'), body.get('email'), body.get('company'))
 
         await self._messenger.send_create_agent_transaction(
             private_key=private_key,

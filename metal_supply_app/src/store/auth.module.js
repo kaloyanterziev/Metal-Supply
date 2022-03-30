@@ -29,7 +29,6 @@ export const auth = {
       return AuthService.register(user).then(
         response => {
           commit('registerSuccess', user);
-          console.log(response)
           return Promise.resolve(response);
         },
         error => {

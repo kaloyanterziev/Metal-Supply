@@ -6,6 +6,10 @@
       </h3>
     </header>
     <p>
+      <strong>Company:</strong>
+      {{currentUser.company}}
+    </p>
+    <p>
       <strong>Email:</strong>
       {{currentUser.email}}
     </p>
@@ -14,7 +18,7 @@
       {{roles[currentUser.role]}}
     </p>
     <hr />
-    <h5>My Records:</h5>
+    <h5 class="mt-4">My Records:</h5>
     <div class=" container row justify-content-between mb-4">
       <input class="form-control col-lg-10" type="search" placeholder="Search" aria-label="Search">
       <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#add-record-modal">

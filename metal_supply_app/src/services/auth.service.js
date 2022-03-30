@@ -23,6 +23,7 @@ class AuthService {
   register(user) {
     return axios.post('/agents', {
       name: user.name,
+      company: user.company,
       email: user.email,
       password: user.password,
       role: parseInt(user.role)

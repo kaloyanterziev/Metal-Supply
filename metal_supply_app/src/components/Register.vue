@@ -14,6 +14,11 @@
             <ErrorMessage name="name" class="error-feedback" />
           </div>
           <div class="form-group">
+            <label for="company">Company</label>
+            <Field name="company" type="text" class="form-control" />
+            <ErrorMessage name="company" class="error-feedback" />
+          </div>
+          <div class="form-group">
             <label for="email">Email</label>
             <Field name="email" type="email" class="form-control" />
             <ErrorMessage name="email" class="error-feedback" />
@@ -81,7 +86,12 @@ export default {
         .string()
         .required("Name is required!")
         .min(3, "Must be at least 3 characters!")
-        .max(20, "Must be maximum 20 characters!"),
+        .max(40, "Must be maximum 40 characters!"),
+      company: yup
+          .string()
+          .required("Company is required!")
+          .min(3, "Must be at least 3 characters!")
+          .max(60, "Must be maximum 60 characters!"),
       email: yup
         .string()
         .required("Email is required!")
@@ -90,7 +100,7 @@ export default {
       password: yup
         .string()
         .required("Password is required!")
-        .min(6, "Must be at least 6 characters!")
+        .min(4, "Must be at least 4 characters!")
         .max(40, "Must be maximum 40 characters!"),
       role: yup
         .number()

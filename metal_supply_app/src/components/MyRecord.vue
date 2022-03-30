@@ -11,7 +11,8 @@
                 :dataLabels="record.contents.map(function(item){return item.metal;})"
                 :dataValues="record.contents.map(function(item){return item.percentage;})"
                 :large="true"/>
-  <h3 class="mt-4">Locations: </h3>
+  <hr />
+  <h3 class="mt-5">Locations:</h3>
   <div class="d-flex justify-content-end  mb-4">
     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#link-record-modal">
       <font-awesome-icon icon="link" /> Link Record
@@ -31,7 +32,6 @@
         :center="center"
         :zoom="3"
         map-type-id="terrain"
-        class="mb-5"
     >
       <GMapMarker
           :key="position.timestamp"
@@ -41,7 +41,8 @@
 
     </GMapMap>
   </div>
-  <h3>History Analysis: </h3>
+  <hr />
+  <h3 class="mt-5">History Analysis: </h3>
   <GMapMap
       :center="history_center"
       :zoom="3"
@@ -53,8 +54,11 @@
         :editable="false"
         ref="polyline" />
   </GMapMap>
-  <RecordCards :records="subRecords" :isCardLink="false" :isLastUpdate="false" class="mt-3"/>
-
+  <hr />
+  <div v-if="subRecords.length > 0">
+    <h3 class="mt-5">Dependant Records: </h3>
+    <RecordCards :records="subRecords" :isCardLink="false" :isLastUpdate="false" class="mt-3"/>
+  </div>
 </template>
 
 <script>
