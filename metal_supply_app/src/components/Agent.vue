@@ -1,19 +1,22 @@
 <template>
-  <div class="container">
-    <header class="jumbotron">
-      <h3>
-        <strong>{{agent.name}}</strong>'s Profile
-      </h3>
-    </header>
-    <p>
+  <header class="jumbotron ">
+    <h3 class="display-4">
+      <strong>{{agent.name}}</strong>
+    </h3>
+    <hr class="my-4">
+    <p class="lead">
+      <strong>Company:</strong>
+      {{agent.company}}
+    </p>
+    <p class="lead">
       <strong>Email:</strong>
       {{agent.email}}
     </p>
-    <p>
+    <p class="lead" v-if="agent.role">
       <strong>Role:</strong>
       {{agent.role}}
     </p>
-  </div>
+  </header>
 </template>
 
 <script>
@@ -30,6 +33,7 @@ export default {
     UserService.getAgent(this.$route.params.id).then(
         (response) => {
           this.agent = response.data;
+          this.agent.role = this.convertRole(this.agent.role)
         },
         (error) => {
           this.content =
@@ -41,6 +45,12 @@ export default {
         }
     );
   },
+  methods: {
+    convertRole(word) {
+      let result = word.split('_').join(" ").toLowerCase();
+      return result[0].toUpperCase() + result.slice(1);
+    }
+  }
 }
 </script>
 

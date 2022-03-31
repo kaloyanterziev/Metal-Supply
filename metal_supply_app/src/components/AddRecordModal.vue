@@ -13,7 +13,7 @@
             <div v-if="!successful">
               <div class="form-group">
                 <label for="record.material_origin">Material Origin</label>
-                <select v-model="record.material_origin" name="record.material_origin" required type="text" class="form-control">
+                <select v-model="record.material_origin" name="record.material_origin" required class="form-control">
                   <option value="" selected disabled>Please select material origin</option>
                   <option>#1 Bare Bright Copper Wire</option>
                   <option>#1 Copper Tubing</option>

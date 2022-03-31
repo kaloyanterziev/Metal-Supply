@@ -124,7 +124,6 @@ export default {
   mounted() {
 
     if (this.loggedIn) {
-      console.log(this.$store.state.auth.user);
       this.$router.push("/profile");
     }
   },

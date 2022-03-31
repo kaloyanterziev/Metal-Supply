@@ -21,13 +21,13 @@
     <hr />
     <h5 class="mt-4">My Records:</h5>
     <div class=" container row justify-content-between mb-4">
-      <input class="form-control col-lg-10" type="search" placeholder="Search" aria-label="Search">
+      <input v-model="search" class="form-control col-lg-10" type="search" placeholder="Search" aria-label="Search">
       <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#add-record-modal">
         <font-awesome-icon icon="plus" /> New Record
       </button>
     </div>
     <AddRecordModal @onRecordCreate="getAgentRecords"/>
-    <RecordCards :records="records" :isCardLink="true" :isLastUpdate="true" />
+    <RecordCards :records="filteredRecords" :isCardLink="true" :isLastUpdate="true" />
   </div>
 </template>
 
@@ -41,6 +41,14 @@ export default {
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
+    },
+    filteredRecords() {
+      if(this.search === "") {
+        return this.records
+      }
+      return this.records.filter(record => {
+        return JSON.stringify(record).toLowerCase().includes(this.search.toLowerCase())
+      })
     }
   },
   components : {
@@ -54,14 +62,14 @@ export default {
         0: "Recycler",
         1: "Converter",
         2: "Waste Owner"
-      }
+      },
+      search: ""
     }
   },
   mounted() {
     if (!this.currentUser) {
       this.$router.push('/login');
     }
-    console.log(this.currentUser)
     this.getAgentRecords()
   },
   methods: {

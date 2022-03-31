@@ -7,12 +7,12 @@
     </p>
   </header>
   <div class=" container row justify-content-between mb-4">
-    <input class="form-control col-lg-10" type="search" placeholder="Search" aria-label="Search">
+    <input v-model="search" class="form-control col-lg-10" type="search" placeholder="Search" aria-label="Search">
     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#add-record-modal">
       <font-awesome-icon icon="plus" /> New Record
     </button>
   </div>
-  <RecordCards :records="records" :isCardLink="false" :isLastUpdate="true" />
+  <RecordCards :records="filteredRecords" :isCardLink="false" :isLastUpdate="true" />
   <AddRecordModal @onRecordCreate="getAllRecords"/>
 </template>
 
@@ -32,6 +32,7 @@ export default {
   data() {
     return {
       records: [],
+      search: ""
     };
   },
   mounted() {
@@ -64,6 +65,16 @@ export default {
           .then((response) => {
             this.records[index]['address'] = response.data.results[0].formatted_address;
           })
+    }
+  },
+  computed: {
+    filteredRecords() {
+      if(this.search === "") {
+        return this.records
+      }
+      return this.records.filter(record => {
+        return JSON.stringify(record).toLowerCase().includes(this.search.toLowerCase())
+      })
     }
   }
 }
