@@ -11,8 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# -----------------------------------------------------------------------------
-# Modifications copyright (C) 2021 <Kaloyan Terizev>
+# ------------------------------------------------------------------------------
+# Modifications copyright (C) 2021 <Kaloyan Terziev>
 
 import hashlib
 

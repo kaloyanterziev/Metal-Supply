@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------------------
-# Modifications copyright (C) 2022 <Kaloyan Terizev>
+# Modifications copyright (C) 2022 <Kaloyan Terziev>
 
 from metal_supply_addressing.addresser import AddressSpace
 from metal_supply_addressing.addresser import get_address_type
