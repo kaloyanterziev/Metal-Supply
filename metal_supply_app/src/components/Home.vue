@@ -1,7 +1,11 @@
 <template>
   <div class="container">
-    <header class="jumbotron">
-      <h3>Metal News and Prices</h3>
+    <header class="jumbotron ">
+      <h3 class="display-4">Metal News and Prices</h3>
+      <hr class="my-4">
+      <p class="lead">
+        Please find below the most recent metal news and prices
+      </p>
     </header>
     <section class="metal-block-container">
       <div class="metal-block-container__inner">

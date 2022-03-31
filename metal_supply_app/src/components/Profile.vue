@@ -1,22 +1,23 @@
 <template>
   <div class="container">
-    <header class="jumbotron">
-      <h3>
+    <header class="jumbotron ">
+      <h3 class="display-4">
         <strong>{{currentUser.name}}</strong>
       </h3>
+      <hr class="my-4">
+      <p class="lead">
+        <strong>Company:</strong>
+        {{currentUser.company}}
+      </p>
+      <p class="lead">
+        <strong>Email:</strong>
+        {{currentUser.email}}
+      </p>
+      <p class="lead">
+        <strong>Role:</strong>
+        {{roles[currentUser.role]}}
+      </p>
     </header>
-    <p>
-      <strong>Company:</strong>
-      {{currentUser.company}}
-    </p>
-    <p>
-      <strong>Email:</strong>
-      {{currentUser.email}}
-    </p>
-    <p>
-      <strong>Role:</strong>
-      {{roles[currentUser.role]}}
-    </p>
     <hr />
     <h5 class="mt-4">My Records:</h5>
     <div class=" container row justify-content-between mb-4">

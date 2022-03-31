@@ -62,6 +62,7 @@ export default {
   mounted() {
     UserService.getAgentRecords().then(
         (response) => {
+          console.log(this.record_id)
           this.records = response.data.filter(record => record.id !== this.record_id)
         },
         (error) => {

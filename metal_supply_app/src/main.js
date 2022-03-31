@@ -4,6 +4,7 @@ import router from "./router";
 import store from "./store";
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-select"
 import { FontAwesomeIcon } from './plugins/font-awesome'
 import  VueGoogleMaps from '@fawmi/vue-google-maps'
 import RecordCards from "@/components/RecordCards";

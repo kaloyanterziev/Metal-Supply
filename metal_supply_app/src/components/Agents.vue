@@ -1,6 +1,12 @@
 <template>
-  <header class="jumbotron">
-    <h3>Agents</h3>
+  <header class="jumbotron ">
+    <h3 class="display-4">
+      Agents
+    </h3>
+    <hr class="my-4">
+    <p class="lead">
+      All Agents on the Platform
+    </p>
   </header>
   <div class="card-columns">
     <div class="card"

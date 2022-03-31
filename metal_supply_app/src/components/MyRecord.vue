@@ -42,20 +42,21 @@
     </GMapMap>
   </div>
   <hr />
-  <h3 class="mt-5">History Analysis: </h3>
-  <GMapMap
-      :center="history_center"
-      :zoom="3"
-      style="width: 100%; height: 600px"
-  >
-    <GMapHeatmap :data="heatData"></GMapHeatmap>
-    <GMapPolyline
-        :path="path"
-        :editable="false"
-        ref="polyline" />
-  </GMapMap>
-  <hr />
   <div v-if="subRecords.length > 0">
+    <h3 class="mt-5">History Analysis: </h3>
+    <GMapMap
+        :center="history_center"
+        :zoom="3"
+        style="width: 100%; height: 600px"
+    >
+      <GMapHeatmap :data="heatData"></GMapHeatmap>
+      <GMapPolyline
+          :path="path"
+          :editable="false"
+          ref="polyline" />
+    </GMapMap>
+    <hr />
+
     <h3 class="mt-5">Dependant Records: </h3>
     <RecordCards :records="subRecords" :isCardLink="false" :isLastUpdate="false" class="mt-3"/>
   </div>
