@@ -99,7 +99,12 @@ def _create_record(state, public_key, payload):
         latitude=payload.data.latitude,
         longitude=payload.data.longitude,
         record_id=payload.data.record_id,
-        timestamp=payload.timestamp)
+        timestamp=payload.timestamp,
+        material_type=payload.data.material_type,
+        material_origin=payload.data.material_origin,
+        contents=payload.data.contents,
+        tonnes=payload.data.tonnes
+    )
 
 
 def _transfer_record(state, public_key, payload):

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------------------
-# Modifications copyright (C) 2021 <Kaloyan Terizev>
+# Modifications copyright (C) 2021 <Kaloyan Terziev>
 
 import datetime
 from json.decoder import JSONDecodeError
@@ -125,15 +125,17 @@ class RouteHandler(object):
         required_fields = ['latitude', 'longitude', 'material_type', 'material_origin', 'contents', 'tonnes']
         validate_fields(required_fields, body)
 
-        await self._database.create_record_entry(record_public_key, body.get('material_type'),
-                                                 body.get('material_origin'), body.get('tonnes'), body.get('contents'),
-                                                 body.get('public', False))
+        await self._database.create_record_entry(record_public_key, body.get('public', False))
 
         await self._messenger.send_create_record_transaction(
             private_key=private_key,
             record_id=record_public_key,
             latitude=body.get('latitude'),
             longitude=body.get('longitude'),
+            material_type=body.get('material_type'),
+            material_origin=body.get('material_origin'),
+            contents=body.get('contents'),
+            tonnes=body.get('tonnes'),
             timestamp=get_time())
 
         return json_response(

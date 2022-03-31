@@ -185,38 +185,33 @@ class Database(object):
                 await cursor.execute(fetch)
                 return await cursor.fetchone()
 
-    async def create_record_entry(self, record_public_key, material_type, material_origin, tonnes, contents, published):
+    async def create_record_entry(self, record_public_key, published):
         insert_records = """
             INSERT INTO records (
                 record_id,
-                material_type,
-                material_origin,
-                tonnes,
                 published
             )
-            VALUES ('{}', '{}', '{}', '{}', '{}');
-        """.format(record_public_key, material_type, material_origin, tonnes, published)
+            VALUES ('{}', '{}');
+        """.format(record_public_key, published)
 
-        insert_record_contents = [
-            """
-            INSERT INTO record_contents (
-            record_id,
-            metal,
-            percentage)
-            VALUES ('{}', '{}', '{}');
-            """.format(
-                record_public_key,
-                content['metal'],
-                content['percentage'])
-            for content in contents
-        ]
-        logging.debug(insert_records)
-        logging.debug(insert_record_contents)
+        # insert_record_contents = [
+        #     """
+        #     INSERT INTO record_contents (
+        #     record_id,
+        #     metal,
+        #     percentage)
+        #     VALUES ('{}', '{}', '{}');
+        #     """.format(
+        #         record_public_key,
+        #         content['metal'],
+        #         content['percentage'])
+        #     for content in contents
+        # ]
         async with self._pool.acquire() as conn:
             async with conn.cursor(cursor_factory=RealDictCursor) as cursor:
                 await cursor.execute(insert_records)
-                for insert in insert_record_contents:
-                    await cursor.execute(insert)
+                # for insert in insert_record_contents:
+                #     await cursor.execute(insert)
 
             conn.commit()
 
@@ -281,12 +276,16 @@ class Database(object):
 
         fetch_record_contents = """
                 SELECT metal, percentage FROM record_contents
-                WHERE record_id='{0}';
+                WHERE record_id='{0}'
+                AND ({1}) >= start_block_num
+                AND ({1}) < end_block_num;
                 """.format(record_public_key, LATEST_BLOCK_NUM)
 
         fetch_record_links = """
                         SELECT record_id FROM record_links
-                        WHERE next_record_id='{0}';
+                        WHERE next_record_id='{0}'
+                        AND ({1}) >= start_block_num
+                        AND ({1}) < end_block_num;
                         """.format(record_public_key, LATEST_BLOCK_NUM)
 
         fetch_record_ownership = """

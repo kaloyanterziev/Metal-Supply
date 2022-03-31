@@ -43,6 +43,10 @@ message CreateRecordAction {
     // Coordinates are expected to be in millionths of a degree
     double latitude = 2;
     double longitude = 3;
+    string material_type = 4;
+    string material_origin = 5;
+    double tonnes = 6;
+    repeated Record.Content contents = 7;
 }
 
 

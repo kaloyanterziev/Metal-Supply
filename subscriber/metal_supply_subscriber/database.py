@@ -327,11 +327,18 @@ class Database(object):
     def insert_record(self, record_dict):
         update_record = """
         UPDATE records 
-        SET timestamp = '{}',
+        SET 
+        material_type = '{}',
+        material_origin = '{}',
+        tonnes = '{}',
+        timestamp = '{}',
         start_block_num = {},
         end_block_num = {}
         WHERE record_id = '{}';
         """.format(
+            record_dict['material_type'],
+            record_dict['material_origin'],
+            record_dict['tonnes'],
             record_dict['timestamp'],
             record_dict['start_block_num'],
             record_dict['end_block_num'],
@@ -340,6 +347,7 @@ class Database(object):
         with self._conn.cursor() as cursor:
             cursor.execute(update_record)
 
+        self._insert_record_contents(record_dict)
         self._insert_record_locations(record_dict)
         self._insert_record_owners(record_dict)
         self._insert_record_links(record_dict)
@@ -377,6 +385,37 @@ class Database(object):
         with self._conn.cursor() as cursor:
             cursor.execute(update_record_locations)
             for insert in insert_record_locations:
+                cursor.execute(insert)
+
+    def _insert_record_contents(self, record_dict):
+        update_record_contents = """
+        UPDATE record_contents SET end_block_num = {}
+        WHERE end_block_num = {} AND record_id = '{}';
+        """.format(
+            record_dict['start_block_num'],
+            record_dict['end_block_num'],
+            record_dict['record_id'])
+
+        insert_record_contents = [
+            """
+            INSERT INTO record_contents (
+            record_id,
+            metal,
+            percentage,
+            start_block_num,
+            end_block_num)
+            VALUES ('{}', '{}', '{}', '{}', '{}');
+            """.format(
+                record_dict['record_id'],
+                content['metal'],
+                content['percentage'],
+                record_dict['start_block_num'],
+                record_dict['end_block_num'])
+            for content in record_dict['contents']
+        ]
+        with self._conn.cursor() as cursor:
+            cursor.execute(update_record_contents)
+            for insert in insert_record_contents:
                 cursor.execute(insert)
 
     def _insert_record_owners(self, record_dict):

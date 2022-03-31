@@ -40,9 +40,17 @@ message Record {
     // Ordered oldest to newest by timestamp
     repeated Owner owners = 3;
 
-    repeated Location locations = 4;
+    string material_type = 4;
 
-    uint64 timestamp = 5;
+    string material_origin = 5;
+
+    double tonnes = 6;
+
+    repeated Content contents = 7;
+
+    repeated Location locations = 8;
+
+    uint64 timestamp = 9;
 }
 
 
