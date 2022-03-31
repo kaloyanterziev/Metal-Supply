@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------------------
-# Modifications copyright (C) 2021 <Kaloyan Terziev>
+# Modifications copyright (C) 2022 <Kaloyan Terziev>
 
 from sawtooth_rest_api.messaging import Connection
 from sawtooth_rest_api.protobuf import client_batch_submit_pb2
