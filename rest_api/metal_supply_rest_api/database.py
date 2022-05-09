@@ -269,7 +269,6 @@ class Database(object):
         fetch_record_locations = """
         SELECT latitude, longitude, timestamp FROM record_locations
         WHERE record_id='{0}'
-        AND agent_id='{1}'
         AND ({2}) >= start_block_num
         AND ({2}) < end_block_num;
         """.format(record_public_key, agent_id, LATEST_BLOCK_NUM)
@@ -291,7 +290,6 @@ class Database(object):
         fetch_record_ownership = """
                 SELECT percentage_owner FROM record_owners
                 WHERE record_id='{0}'
-                AND agent_id='{1}'
                 AND ({2}) >= start_block_num
                 AND ({2}) < end_block_num;
                 """.format(record_public_key, agent_id, LATEST_BLOCK_NUM)
@@ -360,7 +358,9 @@ class Database(object):
 
                         fetch_record_contents = """
                                         SELECT metal, percentage FROM record_contents
-                                        WHERE record_id='{0}';
+                                        WHERE record_id='{0}'
+                                        AND ({1}) >= start_block_num
+                                        AND ({1}) < end_block_num;
                                         """.format(record['record_id'], LATEST_BLOCK_NUM)
 
                         await cursor.execute(fetch_record_locations)
@@ -408,7 +408,9 @@ class Database(object):
 
                         fetch_record_contents = """
                         SELECT metal, percentage FROM record_contents
-                        WHERE record_id='{0}';
+                        WHERE record_id='{0}'
+                        AND ({1}) >= start_block_num
+                        AND ({1}) < end_block_num;
                         """.format(record['record_id'], LATEST_BLOCK_NUM)
 
                         await cursor.execute(fetch_record_locations)

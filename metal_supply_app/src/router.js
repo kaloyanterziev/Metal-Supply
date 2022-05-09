@@ -8,9 +8,6 @@ import Agent from "@/components/Agent";
 import MyRecord from "@/components/MyRecord";
 // lazy-loaded
 const Profile = () => import("./components/Profile.vue")
-const BoardAdmin = () => import("./components/BoardAdmin.vue")
-const BoardModerator = () => import("./components/BoardModerator.vue")
-const BoardUser = () => import("./components/BoardUser.vue")
 
 const routes = [
   {
@@ -55,25 +52,7 @@ const routes = [
     path: "/my-records/:id",
     name: "my-record",
     component: MyRecord
-  },
-  {
-    path: "/admin",
-    name: "admin",
-    // lazy-loaded
-    component: BoardAdmin,
-  },
-  {
-    path: "/mod",
-    name: "moderator",
-    // lazy-loaded
-    component: BoardModerator,
-  },
-  {
-    path: "/user",
-    name: "user",
-    // lazy-loaded
-    component: BoardUser,
-  },
+  }
 ];
 
 const router = createRouter({

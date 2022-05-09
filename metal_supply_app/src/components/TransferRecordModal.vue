@@ -29,7 +29,7 @@
                       v-show="loading"
                       class="spinner-border spinner-border-sm"
                   ></span>
-                Transfer Location
+                Transfer Record
               </button>
             </div>
             <!--            </div>-->
@@ -83,10 +83,11 @@ export default {
       RecordService.transferRecord(this.record_id, this.receiving_agent_id, this.percentage).then(
           data => {
             this.message = data.data.data;
+            this.successful = true;
             const self = this;
             setTimeout(function () {
               self.message = "";
-              self.successful = true;
+              self.successful = false;
               self.$refs.close.click();
               this.$emit('onRecordTransferred');
             }, 3000);

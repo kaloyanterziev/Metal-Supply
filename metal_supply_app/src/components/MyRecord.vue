@@ -51,7 +51,9 @@
     >
       <GMapHeatmap :data="heatData"></GMapHeatmap>
       <GMapPolyline
-          :path="path"
+          v-for="(pathh,index) in paths"
+          :key="index"
+          :path="pathh"
           :editable="false"
           ref="polyline" />
     </GMapMap>
@@ -67,6 +69,7 @@ import RecordService from "@/services/record.service";
 import AddLocationModal from "@/components/AddLocationModal";
 import TransferRecordModal from "@/components/TransferRecordModal";
 import LinkRecordModal from "@/components/LinkRecordModal";
+import GoogleApisService from "@/services/googleapis.service";
 /*global google*/
 
 export default {
@@ -81,7 +84,8 @@ export default {
       record: {},
       subRecords: [],
       heatData: [],
-      path: []
+      path: [],
+      paths: []
     }
   },
   mounted() {
@@ -94,31 +98,45 @@ export default {
             this.record = response.data;
             this.heatData = []
             this.path = []
+            this.paths = []
             this.subRecords = []
-            this.computeStatistics(this.record, 0)
+            this.computeStatistics(this.record, 0, {lat: this.record.locations[0].latitude, lng: this.record.locations[0].longitude} )
           }
       )
     },
-    computeStatistics(record, depth) {
+    computeStatistics(record, depth, end_location) {
       // Pre-order
+      let path = []
       if(depth > 0 && record.contents) {
         this.subRecords.push(record)
       }
 
-      if(record.prev_records && record.prev_records.length > 0) {
-        for (let prev_record of record.prev_records) {
-          this.computeStatistics(prev_record, depth+1)
-        }
-      }
-
-      // Post-order
+      // Pre-order
       if(record.locations && record.locations.length > 0) {
+        record.locations.sort((prev, current) => (prev.timestamp - current.timestamp) )
+        this.getAddress(record, record.locations.slice(-1)[0])
         for(let location of record.locations) {
           this.heatData.push({location: new google.maps.LatLng({lat: location.latitude, lng: location.longitude})})
-          this.path.push({lat: location.latitude, lng: location.longitude})
+          path.push({lat: location.latitude, lng: location.longitude})
         }
       }
 
+      let next_end_location = path[0]
+      path.push(end_location)
+      this.paths.push(path)
+      if(record.prev_records && record.prev_records.length > 0) {
+        for (let prev_record of record.prev_records) {
+          this.computeStatistics(prev_record, depth+1, next_end_location)
+        }
+      }
+
+    },
+    getAddress(record, location) {
+      GoogleApisService.reverseGeocoding(location.latitude, location.longitude)
+          .then((response) => {
+            if(response.data.results.length > 0)
+              record['address'] = response.data.results[0].formatted_address;
+          })
     }
   }, computed: {
     center() {
