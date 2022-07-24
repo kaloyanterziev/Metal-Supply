@@ -38,9 +38,33 @@ psql -U sawtooth metal-supply
 
 This section covers the design decisions taken in the planning phase of the project.
 
-### 1 Design Requirements And Planning
+### 1 Metal Supply Architecture Overview
 
-#### 1.1 Permissioned vs Permissionless
+![Figure 4: System Design](./report/flow.png)
+
+The Metal Supply application includes these components:
+
+- Transaction Processor. The transaction processor defines the business logic and vali-
+    dates transactions. It is created using the Sawtooth Python SDK and thus it has built-in
+    interfaces for simple communication with the Sawtooth Validator. Together the Transac-
+    tion Processor with the Sawtooth Validator make the Validator Node.
+- Web Client. The web client is a lightweight single page application written using the
+    JavaScript framework Vue.js. It has the capability to authenticate and authorize agents on
+    the platform, submit transactions to register new agents, add new records, add record lo-
+    cations, transfer ownership of records, etc. Transactions are submitted as HTTP requests
+    with JSON bodies to the REST API.
+- Rest API. The REST API handles communication with the Validator node. It creates
+    batches of transactions according to the requests submitted from the web client. It man-
+    ages the public/private keys, kept in a reporting database, and signs transactions with
+    them. Also queries the reporting database when a request for retrieval of information is
+    received from the Web Client.
+- Event Subscriber. The event subscriber handles all the delta changes in the state data. It
+    subscribes to the Validator Node in order to receive the state data changes as events and
+    in turn update the reporting database.
+
+### 2 Design Requirements And Planning
+
+#### 2.1 Permissioned vs Permissionless
 
 The Metal Supply application is meant to be a platform that meets companies’ supply chain
 needs. In addition, it is focused on recycling products and creating closed-loop systems for
@@ -52,7 +76,7 @@ should be kept only in the hands of the people managing their companies’ suppl
 permission could also be used by IoT devices that can record relevant information for the supply
 chain, such as location.
 
-#### 1.2 Interaction with the Blockchain network
+#### 2.2 Interaction with the Blockchain network
 
 The application will certainly need a client-facing user interface that will be used for supply
 chain management. Most front-end technologies will suffice regarding a simple, easy-to-use
@@ -60,7 +84,7 @@ and intuitive user interface. However, integration with Google Maps is required 
 the location data for maximum engagement from the supply chain managers’ side. Hence, a
 decision was made in the favour of the popular JavaScript framework - Vue.js
 
-#### 1.3 Off-Chain Storage
+#### 2.3 Off-Chain Storage
 
 The application also needs a reporting database. The function of the reporting database is two-
 fold. Firstly, it serves as a place where we can store company-specific information that does
@@ -73,7 +97,7 @@ purposes but in an industry-grade application ready for deployment, a NoSQL DBMS
 more appropriate where the data will be replicated, sharded and distributed to the validating
 nodes of the company that owns the data.
 
-#### 1.4 Modular Design
+#### 2.4 Modular Design
 
 The back-end systems that make everything possible need to be highly modular and be able to
 be deployed and run on a variety of computers without extensive configuration of the specific
@@ -85,7 +109,7 @@ allows deployment of applications in separate containers independently and in di
 guages. It also reduces the risk of conflict between languages, libraries or frameworks when
 they are containerized.
 
-#### 1.5 Client vs Server Signing Model
+#### 2.5 Client vs Server Signing Model
 
 When using a REST API there is a consideration to be made of what signing model is the most
 appropriate for the use case. Like everything else in computer science, both models have their
@@ -132,31 +156,6 @@ security measure). The server can then retrieve and decrypt the private key of a
 user and sign transactions on their behalf. While this is better than the na ̈ıve approach, it is
 only as secure as the server’s security mechanisms. The Metal Supply application uses this
 approach.
-
-### 2 Metal Supply Architecture Overview
-
-![Figure 4: System Design](./report/flow.png)
-
-The Metal Supply application includes these components:
-
-- Transaction Processor. The transaction processor defines the business logic and vali-
-    dates transactions. It is created using the Sawtooth Python SDK and thus it has built-in
-    interfaces for simple communication with the Sawtooth Validator. Together the Transac-
-    tion Processor with the Sawtooth Validator make the Validator Node.
-- Web Client. The web client is a lightweight single page application written using the
-    JavaScript framework Vue.js. It has the capability to authenticate and authorize agents on
-    the platform, submit transactions to register new agents, add new records, add record lo-
-    cations, transfer ownership of records, etc. Transactions are submitted as HTTP requests
-    with JSON bodies to the REST API.
-- Rest API. The REST API handles communication with the Validator node. It creates
-    batches of transactions according to the requests submitted from the web client. It man-
-    ages the public/private keys, kept in a reporting database, and signs transactions with
-    them. Also queries the reporting database when a request for retrieval of information is
-    received from the Web Client.
-- Event Subscriber. The event subscriber handles all the delta changes in the state data. It
-    subscribes to the Validator Node in order to receive the state data changes as events and
-    in turn update the reporting database.
-
 
 ### 3 Application Design
 
