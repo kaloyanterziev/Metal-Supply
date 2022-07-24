@@ -5,13 +5,13 @@
 ### Backend
 
 To run the application, navigate to the project's root directory, make sure you have docker running, then use
-this command to build the containers:
+this command to build all containers needed for running the app:
 
 ```bash
 docker-compose -f sawtooth-default.yaml up
 ```
 
-Stop the containers before every run with:
+Stop the containers before another build with:
 ```bash
 docker-compose -f sawtooth-default.yaml down
 ```
@@ -25,9 +25,19 @@ npm run serve
 
 ### Check contents of DB
 
+Get the hash id of the postgres container 
+
+```bash
+docker ps
+```
+
+Replace <hash> in the following command with the container hash
+
 ```bash
 docker exec -it <hash> sh
 ```
+
+Connect to the terminal-based front-end to PostgreSQL 
 
 ```bash
 psql -U sawtooth metal-supply
