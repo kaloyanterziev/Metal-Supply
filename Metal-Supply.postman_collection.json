@@ -1,0 +1,321 @@
+{
+	"info": {
+		"_postman_id": "e710d415-ec31-4dd2-b120-d66031abb198",
+		"name": "Metal-Supply",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get All Agents",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/agents",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"agents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Agent",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/agents/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"agents",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Agent",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Kaloyan5\",\n    \"password\": \"asdf5\",\n    \"role\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/agents",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"agents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Records",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/records",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"records"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Record",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiIsImlhdCI6MTY0NDc5OTUwMCwiZXhwIjoxNjQ0ODAzMTAwfQ.eyJwdWJsaWNfa2V5IjoiMDNlNDRiMjQ4MzQ1NWUxNzE1NjRlMWRjMzViMWM5ODA5MWQ4ZDFkMDM3ODliNmRmZDNiOWNmMDg1NTExMmMwNTY1In0.q0PSCaYLys5wNG5zLOLkYTOiwhni0LctFyFvOoeSSqCNh00H992zB-rrz78W8EzXMznBu_qzs0pjikpnBfcLfQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"latitude\": 15.456,\n    \"longitude\": 15.546,\n    \"material_type\": \"copper\",\n    \"material_origin\": \"Wind Turbine\",\n    \"contents\": [\n        {\"percentage\": 98.0, \"metal\": \"Cu\"},\n        {\"percentage\": 2.0, \"metal\": \"Al\"}\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/records/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"records",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Record",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiIsImlhdCI6MTY0NDc5OTUwMCwiZXhwIjoxNjQ0ODAzMTAwfQ.eyJwdWJsaWNfa2V5IjoiMDNlNDRiMjQ4MzQ1NWUxNzE1NjRlMWRjMzViMWM5ODA5MWQ4ZDFkMDM3ODliNmRmZDNiOWNmMDg1NTExMmMwNTY1In0.q0PSCaYLys5wNG5zLOLkYTOiwhni0LctFyFvOoeSSqCNh00H992zB-rrz78W8EzXMznBu_qzs0pjikpnBfcLfQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"latitude\": 15.456,\n    \"longitude\": 15.546,\n    \"material_type\": \"copper\",\n    \"material_origin\": \"Wind Turbine\",\n    \"public\": true,\n    \"tonnes\": 128.128,\n    \"contents\": [\n        {\"percentage\": 98.0, \"metal\": \"Cu\"},\n        {\"percentage\": 2.0, \"metal\": \"Al\"}\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/records",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"records"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Transfer Record",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiIsImlhdCI6MTY0NDc5OTUwMCwiZXhwIjoxNjQ0ODAzMTAwfQ.eyJwdWJsaWNfa2V5IjoiMDNlNDRiMjQ4MzQ1NWUxNzE1NjRlMWRjMzViMWM5ODA5MWQ4ZDFkMDM3ODliNmRmZDNiOWNmMDg1NTExMmMwNTY1In0.q0PSCaYLys5wNG5zLOLkYTOiwhni0LctFyFvOoeSSqCNh00H992zB-rrz78W8EzXMznBu_qzs0pjikpnBfcLfQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"receiving_agent\": 2, \n    \"percentage\": 60.0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/records/1/transfer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"records",
+						"1",
+						"transfer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Record Location",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiIsImlhdCI6MTY0NDc5OTUwMCwiZXhwIjoxNjQ0ODAzMTAwfQ.eyJwdWJsaWNfa2V5IjoiMDNlNDRiMjQ4MzQ1NWUxNzE1NjRlMWRjMzViMWM5ODA5MWQ4ZDFkMDM3ODliNmRmZDNiOWNmMDg1NTExMmMwNTY1In0.q0PSCaYLys5wNG5zLOLkYTOiwhni0LctFyFvOoeSSqCNh00H992zB-rrz78W8EzXMznBu_qzs0pjikpnBfcLfQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"latitude\": 19.456,\n    \"longitude\": 19.546\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/records/1/location",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"records",
+						"1",
+						"location"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get My Records",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzUxMiIsImlhdCI6MTY0NjMyMTk4MywiZXhwIjoxNjQ2MzI1NTgzfQ.eyJwdWJsaWNfa2V5IjoiMDJhMmY0YTVlYWJlMTU2MjUxZmFjZGJiYTJkYmM1ODFlMGQ1YzdmZjNhNDMwZjY3Zjg4ZWE1YTY3MjJhNzQzMTBjIn0.YOzYS8B2AFwW5n7xwF1ZZaNwL7uq-7qgasIPcwoXMxj7w0wNOfaq8J37KScf0ElFObbYkHZKpCFU-DGgM1g2KA",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/agents/records",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"agents",
+						"records"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authentication",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"kaloyan@abv.bg\",\n    \"password\": \"kaloyan\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/authentication",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"authentication"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Link Record",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiIsImlhdCI6MTY0NDc5OTUwMCwiZXhwIjoxNjQ0ODAzMTAwfQ.eyJwdWJsaWNfa2V5IjoiMDNlNDRiMjQ4MzQ1NWUxNzE1NjRlMWRjMzViMWM5ODA5MWQ4ZDFkMDM3ODliNmRmZDNiOWNmMDg1NTExMmMwNTY1In0.q0PSCaYLys5wNG5zLOLkYTOiwhni0LctFyFvOoeSSqCNh00H992zB-rrz78W8EzXMznBu_qzs0pjikpnBfcLfQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/records/1/link/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"records",
+						"1",
+						"link",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
