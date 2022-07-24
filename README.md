@@ -44,18 +44,18 @@ This section covers the design decisions taken in the planning phase of the proj
 
 The Metal Supply application includes these components:
 
-- Transaction Processor. The transaction processor defines the business logic and vali-
-    dates transactions. It is created using the Sawtooth Python SDK and thus it has built-in
-    interfaces for simple communication with the Sawtooth Validator. Together the Transac-
-    tion Processor with the Sawtooth Validator make the Validator Node.
+- Transaction Processor. The transaction processor defines the business logic and validates 
+    transactions. It is created using the Sawtooth Python SDK and thus it has built-in
+    interfaces for simple communication with the Sawtooth Validator. Together the Transaction 
+    Processor with the Sawtooth Validator make the Validator Node.
 - Web Client. The web client is a lightweight single page application written using the
     JavaScript framework Vue.js. It has the capability to authenticate and authorize agents on
-    the platform, submit transactions to register new agents, add new records, add record lo-
-    cations, transfer ownership of records, etc. Transactions are submitted as HTTP requests
+    the platform, submit transactions to register new agents, add new records, add record locations,
+    transfer ownership of records, etc. Transactions are submitted as HTTP requests
     with JSON bodies to the REST API.
 - Rest API. The REST API handles communication with the Validator node. It creates
-    batches of transactions according to the requests submitted from the web client. It man-
-    ages the public/private keys, kept in a reporting database, and signs transactions with
+    batches of transactions according to the requests submitted from the web client. It manages 
+    the public/private keys, kept in a reporting database, and signs transactions with
     them. Also queries the reporting database when a request for retrieval of information is
     received from the Web Client.
 - Event Subscriber. The event subscriber handles all the delta changes in the state data. It
