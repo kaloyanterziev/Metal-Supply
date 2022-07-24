@@ -15,7 +15,7 @@ createApp(App)
     .use(store)
     .use(VueGoogleMaps, {
         load: {
-            key: 'AIzaSyCeog1wzuKJwMOgd3_gX-nwmuCf1liBW-M',
+            key: process.env.GOOGLE_API_KEY,
             libraries: "visualization"
         },
     })
