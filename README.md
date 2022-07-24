@@ -38,9 +38,9 @@ psql -U sawtooth metal-supply
 
 This section covers the design decisions taken in the planning phase of the project.
 
-### 3.1 Design Requirements And Planning
+### 1 Design Requirements And Planning
 
-#### 3.1.1 Permissioned vs Permissionless
+#### 1.1 Permissioned vs Permissionless
 
 The Metal Supply application is meant to be a platform that meets companies’ supply chain
 needs. In addition, it is focused on recycling products and creating closed-loop systems for
@@ -52,15 +52,15 @@ should be kept only in the hands of the people managing their companies’ suppl
 permission could also be used by IoT devices that can record relevant information for the supply
 chain, such as location.
 
-#### 3.1.2 Interaction with the Blockchain network
+#### 1.2 Interaction with the Blockchain network
 
 The application will certainly need a client-facing user interface that will be used for supply
 chain management. Most front-end technologies will suffice regarding a simple, easy-to-use
 and intuitive user interface. However, integration with Google Maps is required to display
 the location data for maximum engagement from the supply chain managers’ side. Hence, a
-decision was made in the favour of the popular JavaScript^1 framework - Vue.js^2
+decision was made in the favour of the popular JavaScript framework - Vue.js
 
-#### 3.1.3 Off-Chain Storage
+#### 1.3 Off-Chain Storage
 
 The application also needs a reporting database. The function of the reporting database is two-
 fold. Firstly, it serves as a place where we can store company-specific information that does
@@ -68,28 +68,24 @@ not need to clutter the data models of the blockchain. The company-specific info
 also be easily erasable in case a partner leaves the platform. Secondly, it serves as a much
 faster way for querying information instead of calling the blockchain nodes every time we
 
-(^1) A programming language that is one of the core technologies of the World Wide Web,
-(^2) JavaScript framework for building user interfaces and single-page applications.
-
-
 need some information. A choice was made in favour of a relational DBMS for development
 purposes but in an industry-grade application ready for deployment, a NoSQL DBMS will be
-more appropriate where the data will be replicated, sharded^3 and distributed to the validating
+more appropriate where the data will be replicated, sharded and distributed to the validating
 nodes of the company that owns the data.
 
-#### 3.1.4 Modular Design
+#### 1.4 Modular Design
 
 The back-end systems that make everything possible need to be highly modular and be able to
 be deployed and run on a variety of computers without extensive configuration of the specific
 environment. For that very reason, we need to enforce the separation of the back-end systems
 and build it using a micro-service architecture where different components will interact with
 each other through prespecified channels of communication. For the aforementioned reasons
-we need to build the components into Docker^4 containers because they are very flexible and
+we need to build the components into Docker containers because they are very flexible and
 allows deployment of applications in separate containers independently and in different lan-
 guages. It also reduces the risk of conflict between languages, libraries or frameworks when
 they are containerized.
 
-#### 3.1.5 Client vs Server Signing Model
+#### 1.5 Client vs Server Signing Model
 
 When using a REST API there is a consideration to be made of what signing model is the most
 appropriate for the use case. Like everything else in computer science, both models have their
@@ -106,20 +102,13 @@ The advantage of this model is that transactions are signed locally using the us
 key and thus their identity is fully verifiable. Even in the event that the server is fully compro-
 mised, there is no way to falsify transactions.
 The disadvantage of this model is the rest api only contains 1 endpoint for submitting
-transactions and thus does not follow RESTful standards instead of supporting the full CRUD^5
+transactions and thus does not follow RESTful standards instead of supporting the full CRUD
 array of manipulations for a given entity. Another disadvantage is that every client needs to
 implement transaction creation, serialization and signing functionality.
 This model leaves the responsibility to the users to protect their own private key and requires
-the use of rich clients^6. Sawtooth provides a default REST API which only submits transactions
+the use of rich clients. Sawtooth provides a default REST API which only submits transactions
 which are already serialized. However, this is not the signing model this project follows and
 thus a custom REST API is needed.
-
-(^3) Sharding is a method for distributing data across multiple machines[21]
-(^4) Docker is a set of platform as a service products that use OS-level virtualization to deliver software in pack-
-ages called containers.
-5
-(^6) computer that typically provides rich functionality with little to no dependence on the central server.
-
 
 Server signing model
 
@@ -144,7 +133,9 @@ user and sign transactions on their behalf. While this is better than the na ̈�
 only as secure as the server’s security mechanisms. The Metal Supply application uses this
 approach.
 
-### 3.2 Metal Supply Architecture Overview
+### 2 Metal Supply Architecture Overview
+
+![Figure 4: System Design](./report/flow.png)
 
 The Metal Supply application includes these components:
 
@@ -167,7 +158,7 @@ The Metal Supply application includes these components:
     in turn update the reporting database.
 
 
-### 3.3 Application Design
+### 3 Application Design
 
 Before going into the specific components, it is essential to go through the application design.
 In the Metal Supply application records are the metal products that are tracked throughout
@@ -175,7 +166,7 @@ the supply chain, whereas agents are the users of the system, or in other words,
 supply chain manager. The Transaction payload is the set of fields provided to the Transaction
 Processor in order to update the state.
 
-#### 3.3.1 GDPR Compliance
+#### 3.1 GDPR Compliance
 
 There have been considerations about adding additional information about the agent/record in
 the blockchain state. Information such as name, phone, company, etc. This is the intuitive
@@ -190,7 +181,7 @@ records on the blockchain could not be linked to real users. In the case of a re
 erasure of personal data, we could easily delete the rows in the reporting database about the
 given user.
 
-#### 3.3.2 State Data Models
+#### 3.2 State Data Models
 
 Payload Serialization and Deserialization
 
@@ -202,31 +193,27 @@ Likewise, when a client sends a transaction to the validator, it must serialize 
 data. For this reason, the encoding scheme must be deterministic; serialization and deserializa-
 tion must always produce the exact same results.
 Consequently, all data models in the Metal Supply application are defined using protocol
-buffers^7 (protobufs) to encode all objects before storing them in the state (both payloads and
+buffers (protobufs) to encode all objects before storing them in the state (both payloads and
 state data). Metal Supply uses protobufs to serialize batches and transactions because they
 serialize and deserialize identically for the purposes of the project.
 
-Agent Data Model
+##### Agent Data Model
+
+![Figure 1: Agent Data Model](./report/agent_pb2.png)
 
 Each agent has a public and private key associated with them. Keep in mind that private keys
 are not stored in the state(the blockchain), instead it is encrypted and stored in an off-chain
 database. The agent can be 1 of 3 types - Waste Owner, Recycler, and Converter. A Waste
 Owner is in a possession of end-of-life metal products. Recyclers are the ones separating
 
-(^7) Protocol buffers are Google’s language-neutral, platform-neutral, extensible mechanism for serializing struc-
-tured data
-
-
-```
-Figure 3.1: Agent Data Model
-```
 all the different metals inside the metal products. Converters take the separated metals and
 convert them into new products. An agent can create, transfer and update records. The Agent
-data model is defined in Figure 3.1.
+data model is defined in Figure 1.
 
-Record Data Model
+##### Record Data Model
+![Figure 2: Record Data Model](./report/record_pb2.png)
 
-A record consists of many parameters that define the record. See Figure 3.2. A detailed expla-
+A record consists of many parameters that define the record. See Figure 2. A detailed expla-
 nation of the fields can be found below:
 
 - Record IDThe ID of the record
@@ -248,11 +235,8 @@ nation of the fields can be found below:
        have more than 1 owner.
     - Timestamp- Timestamp of the when the location was recorded.
 
-
-```
-Figure 3.2: Record Data Model
-```
-Payload Data Model
+    
+##### Payload Data Model
 
 Another essential data model that is required by the Transaction Processor is the Transaction
 Payload. Do note that the signature of the agent(owner) is not part of the payload but it is
@@ -279,9 +263,11 @@ received by the transaction processor as well. We have 5 types of payloads:
        - the signer is not one of the owners of the record.
 
 
-#### 3.3.3 Database Schema
+#### 3.3 Database Schema
 
-Before building the components, a database schema should be defined. See Figure 3.3. The
+![Figure 3: Reporting Database Schema](./report/db_schema.png)
+
+Before building the components, a database schema should be defined. See Figure 3. The
 reporting database has three types of columns: a blocks table, on-chain tables, and off-chain ta-
 bles. The blocks table represents all block numbers and hash ids. The on-chain tables represent
 the data stored on the blockchain and analogically the off-chain tables - the data not stored on
@@ -315,7 +301,7 @@ sents whether the records are marketed on the website. All child tables have a m
 relationship with the parent tablerecordsbecause a single record can have multiple locations,
 owners, contents and links.
 
-### 3.4 Choice of Consensus
+### 4 Choice of Consensus
 
 Throughout the whole development and testing process, the Dev mode consensus algorithm
 was used, provided by Sawtooth for exactly that purpose. It selects a random leader that writes
@@ -326,11 +312,6 @@ the best performance. On the other hand, if the network is used by a large conso
 ganisations and/or open membership is required, the best consensus will be PoET. However,
 in the same case, if the hardware on which the blockchain is going to be run does not support
 a special CPU instruction set called Intel Software Guard Extensions (SGX), then the PoET
-
-
-```
-Figure 3.3: Reporting Database Schema
-```
 simulator is going to be the obvious choice. The great thing about the platform is that we can
 swap the consensus algorithm dynamically even after the network goes into production. This
 enables us to choose the best consensus algorithm depending on the maturity of the platform.
@@ -339,11 +320,11 @@ consensus is not a bad choice. After the nodes grow more than four or more organ
 we could switch to PBFT. When the network becomes even bigger, we could test how PoET
 performs and choose a version supported by the available hardware.
 
-### 3.5 Chapter Summary
+### 5 Chapter Summary
 
 This chapter describes the design requirements and the needed planning involved in the project.
-It also provides detailed description of the data models used. The chapter also covers the archi-
-tecture of the application, as well as choices made in the process of planning and development.
+It also provides detailed description of the data models used. The chapter also covers the architecture 
+of the application, as well as choices made in the process of planning and development.
 
 
 
