@@ -328,12 +328,3 @@ If the network is used by one company with a small number of nodes, maybe the de
 consensus is not a bad choice. After the nodes grow more than four or more organisations join,
 we could switch to PBFT. When the network becomes even bigger, we could test how PoET
 performs and choose a version supported by the available hardware.
-
-### 5 Chapter Summary
-
-This chapter describes the design requirements and the needed planning involved in the project.
-It also provides detailed description of the data models used. The chapter also covers the architecture 
-of the application, as well as choices made in the process of planning and development.
-
-
-
